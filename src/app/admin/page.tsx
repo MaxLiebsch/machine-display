@@ -77,7 +77,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       <div>
         <h1 className="text-3xl mb-2">Crawler</h1>
         <p>Enter a link you want to crawl.</p>
-        {/* <CrawlPageForm onPageLoaded={setPageContent} /> */}
+        <CrawlPageForm onPageLoaded={setPageContent} />
         {pageContent && (
           <section className={`${!pageContent && "hidden"}`}>
             {productPageCreated?.success ? (
