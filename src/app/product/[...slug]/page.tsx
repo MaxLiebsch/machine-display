@@ -102,7 +102,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
             <div className="mt-10">
               <a
-                href={`https://api.whatsapp.com/send?phone=+491634037880&text=${
+                href={`https://api.whatsapp.com/send?phone=${encodeURIComponent('491634037880')}&text=${
                   encodeURIComponent("I'm interested in this machine:\n") +
                   "https://machinery.dipmaxexport.com/product/" +
                   items.documents[0].slug +
