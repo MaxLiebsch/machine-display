@@ -18,9 +18,21 @@ import ControlledTextfield from "../controlledFields/ControlledTextfield";
 import { nanoid } from "nanoid";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
-import { authenicatedFEClient, createItem, getJWT } from "@/app/lib/services/appwrite.service";
+import {
+  authenicatedFEClient,
+  createItem,
+  getJWT,
+} from "@/app/lib/services/appwrite.service";
 import { enqueueSnackbar } from "notistack";
 import { api } from "@/app/lib/services/api.service";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(
+  () => {
+    return import("../Editor");
+  },
+  { ssr: false }
+);
 
 interface IProductForm {
   onProductPageCreated: Dispatch<
@@ -403,38 +415,16 @@ const ProductForm = ({
             </div>
           </div>
           <h1 className="text-xl">Description</h1>
-          <CKEditor
-            editor={ClassicEditor}
-            data={getValues("description")}
-            onReady={(editor) => {
-              descriptionEditorRef.current = editor;
-            }}
-            onChange={(event, editor) => {
-              setValue("description", editor.getData());
-            }}
-            onBlur={(event, editor) => {
-              console.log("Blur.", editor);
-            }}
-            onFocus={(event, editor) => {
-              console.log("Focus.", editor);
-            }}
+          <Editor
+            onGetValues={getValues}
+            onSetValue={setValue}
+            ref={descriptionEditorRef}
           />
           <h1 className="text-xl mb-2">Details</h1>
-          <CKEditor
-            editor={ClassicEditor}
-            data={getValues("details")}
-            onReady={(editor) => {
-              detailsEditorRef.current = editor;
-            }}
-            onChange={(event, editor) => {
-              setValue("details", editor.getData());
-            }}
-            onBlur={(event, editor) => {
-              console.log("Blur.", editor);
-            }}
-            onFocus={(event, editor) => {
-              console.log("Focus.", editor);
-            }}
+          <Editor
+            onGetValues={getValues}
+            onSetValue={setValue}
+            ref={detailsEditorRef}
           />
           <h1 className="text-2xl mb-2">Images</h1>
           <div className="flex flex-row justify-evenly flex-wrap gap-1">

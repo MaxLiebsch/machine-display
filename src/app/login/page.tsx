@@ -1,12 +1,12 @@
 import React from "react";
-import SignInForm from "../components/forms/SignInForm";
+// import SignInForm from "../components/forms/SignInForm";
 
-const SignInPage = async () => {
+const SignInPage = () => {
 
   return (
     <div className="mx-auto max-w-2xl">
       <h2 className="text-xl">Sign In</h2>
-      <SignInForm />
+      {/* <SignInForm /> */}
     </div>
   );
 };

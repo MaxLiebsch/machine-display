@@ -1,17 +1,16 @@
 import { Dialog } from "@headlessui/react";
 
-export default function PhotoModal({ params }) {
+export default function PhotoModal({ params }: {params: {slug: string}}) {
   return (
     <Dialog open={true} onClose={() => {}}>
       <Dialog.Panel>
-        <Dialog.Title>Deactivate account</Dialog.Title>
+        <Dialog.Title>PhotoModal</Dialog.Title>
         <Dialog.Description>
-          This will permanently deactivate your account
+           Photo Modal content
         </Dialog.Description>
 
         <p>
-          Are you sure you want to deactivate your account? All of your data
-          will be permanently removed. This action cannot be undone.
+          Coming soon.
         </p>
 
         {/* <button onClick={() => setIsOpen(false)}>Deactivate</button>

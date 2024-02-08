@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import CrawlPageForm from "../components/forms/CrawlPageForm";
-import { SnackbarProvider } from "notistack";
 import ProductForm from "../components/forms/ProductForm";
 import { Button } from "@mui/material";
 import { getAccount, getSession } from "../lib/services/appwrite.service";
@@ -75,11 +74,10 @@ export default function Page({ params }: { params: { slug: string } }) {
   }
   return (
     <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8 pb-20">
-      <SnackbarProvider />
       <div>
         <h1 className="text-3xl mb-2">Crawler</h1>
         <p>Enter a link you want to crawl.</p>
-        <CrawlPageForm onPageLoaded={setPageContent} />
+        {/* <CrawlPageForm onPageLoaded={setPageContent} /> */}
         {pageContent && (
           <section className={`${!pageContent && "hidden"}`}>
             {productPageCreated?.success ? (
