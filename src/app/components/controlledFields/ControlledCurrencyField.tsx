@@ -56,8 +56,7 @@ const ControlledCurrencyField: React.FC<ControlledCurrencyFieldProps> = (
           title={String(fieldState.error?.message)}
         >
           <TextField
-            InputProps={{
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            InputProps={{ 
               inputComponent: NumericFormatCustom as any,
               startAdornment: (
                 <InputAdornment position={position}>{currency}</InputAdornment>
