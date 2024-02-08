@@ -14,11 +14,9 @@ const { CRAWLER_BE, IMAGOR_BASE_URL, WATERMARK_FILE, IMAGOR_SECRET } =
   process.env;
 
 export async function POST(request: NextRequest) {
-  const cookie = cookies().get(
-    `a_session_${process.env.NEXT_PUBLIC_PROJECT_ID}_legacy`
-  );
+
   const jwt = headers().get("x-appwrite-user-jwt");
-  if (!cookie || !jwt) return new Response(null, { status: 401 });
+  if (!jwt) return new Response(null, { status: 401 });
 
   const storage = new Storage(getAuthenicatedClient(jwt));
 

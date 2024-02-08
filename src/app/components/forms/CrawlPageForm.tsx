@@ -7,6 +7,7 @@ import * as yup from "yup";
 import axios from "axios";
 import { PageContent } from "@/app/admin/page";
 import { enqueueSnackbar } from "notistack";
+import { api } from "@/app/lib/services/api.service";
 
 interface IFormInput {
   link: string;
@@ -34,7 +35,7 @@ const CrawlPageForm = ({ onPageLoaded }: ICrawlPageForm) => {
   } = methods;
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const details = await axios.get("/api/product/crawl?link=" + data.link);
+    const details = await api.get("/product/crawl?link=" + data.link);
     if (details.status === 200) {
       onPageLoaded(details.data.content);
     } else {

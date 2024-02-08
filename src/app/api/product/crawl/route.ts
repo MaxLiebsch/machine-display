@@ -1,13 +1,12 @@
 import axios from "axios";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import * as yup from "yup";
 
 export async function GET(request: NextRequest) {
-  const cookie = cookies().get(
-    `a_session_${process.env.NEXT_PUBLIC_PROJECT_ID}_legacy`
-  );
-  if (!cookie) return new Response(null, { status: 401 });
+  
+  const jwt = headers().get("x-appwrite-user-jwt");
+  if (!jwt) return new Response(null, { status: 401 });
 
   
   const searchParams = request.nextUrl.searchParams;

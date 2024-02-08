@@ -1,17 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 type ResponseData = {
   html: string;
 };
 
 export async function POST(request: Request) {
-  const cookie = cookies().get(
-    `a_session_${process.env.NEXT_PUBLIC_PROJECT_ID}_legacy`
-  );
-  if (!cookie) return new Response(null, { status: 401 });
+  const jwt = headers().get("x-appwrite-user-jwt");
+  if (!jwt) return new Response(null, { status: 401 });
+
   const { text, type } = await request.json();
 
   const openAIApiKey = process.env.OPENAI_API_KEY!;

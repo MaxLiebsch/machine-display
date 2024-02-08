@@ -187,7 +187,7 @@ const ProductForm = ({
   const detailsMutation = useMutation({
     mutationFn: (variables: { text: string; type: "html" | "text" }) => {
       enqueueSnackbar({ variant: "info", message: "Generating details..." });
-      return axios.post("/api/get-html", variables).then((res) => res.data);
+      return api.post("/get-html", variables).then((res) => res.data);
     },
     onSuccess: (data, variables) => {
       const content = data.html;
@@ -204,7 +204,7 @@ const ProductForm = ({
         variant: "info",
         message: "Generating description...",
       });
-      return axios.post("/api/get-html", variables).then((res) => res.data);
+      return api.post("/get-html", variables).then((res) => res.data);
     },
     onSuccess: (data, variables) => {
       const content = data.html;
@@ -417,11 +417,13 @@ const ProductForm = ({
           <h1 className="text-xl">Description</h1>
           <Editor
             onGetValues={getValues}
+            name="description"
             onSetValue={setValue}
             ref={descriptionEditorRef}
           />
           <h1 className="text-xl mb-2">Details</h1>
           <Editor
+            name="details"
             onGetValues={getValues}
             onSetValue={setValue}
             ref={detailsEditorRef}

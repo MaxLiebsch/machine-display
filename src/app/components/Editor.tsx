@@ -7,21 +7,23 @@ import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 const Editor = ({
   onGetValues,
   onSetValue,
+  name,
   ref,
 }: {
   onGetValues: UseFormGetValues<IProduct>;
   onSetValue: UseFormSetValue<IProduct>;
+  name: keyof IProduct;
   ref: MutableRefObject<ClassicEditor | null>;
 }) => {
   return (
     <CKEditor
       editor={ClassicEditor}
-      data={onGetValues("details")}
+      data={onGetValues(name)}
       onReady={(editor) => {
         ref.current = editor;
       }}
       onChange={(event, editor) => {
-        onSetValue("details", editor.getData());
+        onSetValue(name, editor.getData());
       }}
       onBlur={(event, editor) => {
         console.log("Blur.", editor);
