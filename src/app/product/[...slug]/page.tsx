@@ -2,47 +2,44 @@ import Gallery from "@/app/components/layout/Gallery";
 import { getItem } from "@/app/lib/services/appwrite.service";
 import React from "react";
 import { redirect } from "next/navigation";
-import type { Metadata, ResolvingMetadata } from "next"
+import type { Metadata, ResolvingMetadata } from "next";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 type Props = {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
 export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
-  const id = params.slug
- 
+  const id = params.slug;
+
   // fetch data
   const product = await getItem(params.slug);
- 
+
   // optionally access and extend (rather than replace) parent metadata
   // const previousImages = (await parent).openGraph?.images || []
- 
+
   return {
     title: product.documents[0].name,
-    description: product.documents[0].description
-  }
+    description: product.documents[0].description,
+  };
 }
-
-
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const items = await getItem(params.slug);
-  if(items.total === 0) {
-    redirect('/')
+  if (items.total === 0) {
+    redirect("/");
   }
   return (
-
     <div className="bg-white">
-      <div className="pt-6">
+      <div className="pt-6 px-2">
         <nav aria-label="Breadcrumb">
           <ol
             role="list"
@@ -103,14 +100,20 @@ export default async function Page({ params }: { params: { slug: string } }) {
               </p>
             </p>
 
-            <form className="mt-10">
-              <button
-                type="submit"
+            <div className="mt-10">
+              <a
+                href={`https://api.whatsapp.com/send?phone=+491634037880&text=${
+                  encodeURIComponent("I'm interested in this machine:\n") +
+                  "https://machinery.dipmaxexport.com/product/" +
+                  items.documents[0].slug +
+                  encodeURIComponent("\nIs it still available?")
+                }`}
+                target="_blank"
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-primary px-8 py-3 text-base font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 Talk to us on Whatsapp
-              </button>
-            </form>
+              </a>
+            </div>
           </div>
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
             {/* Description and details */}
@@ -120,17 +123,25 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
                 <div className="space-y-6">
                   <p className="text-base text-gray-900">
-                    <div dangerouslySetInnerHTML={{__html: items.documents[0].description}}></div>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: items.documents[0].description,
+                      }}
+                    ></div>
                   </p>
                 </div>
               </div>
             )}
             {items.documents[0].details && (
               <div className="mt-10">
-                <h2 className="text-sm font-medium text-gray-900 text-lg">Details</h2>
+                <h2 className="text-sm font-medium text-gray-900 text-lg">
+                  Details
+                </h2>
                 <div className="mt-4 space-y-6">
                   <div
-                    dangerouslySetInnerHTML={{ __html: items.documents[0].details }}
+                    dangerouslySetInnerHTML={{
+                      __html: items.documents[0].details,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -139,7 +150,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
       </div>
     </div>
-    
   );
 }
 
