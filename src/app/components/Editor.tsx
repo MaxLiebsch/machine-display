@@ -4,7 +4,7 @@ import ClassicEditor from "ckeditor5-custom-build";
 import { IProduct } from "../product/[...slug]/page";
 import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 
-const Editor = ({
+const MyEditor = ({
   onGetValues,
   onSetValue,
   name,
@@ -16,23 +16,27 @@ const Editor = ({
   ref: MutableRefObject<ClassicEditor | null>;
 }) => {
   return (
-    <CKEditor
-      editor={ClassicEditor}
-      data={onGetValues(name)}
-      onReady={(editor) => {
-        ref.current = editor;
-      }}
-      onChange={(event, editor) => {
-        onSetValue(name, editor.getData());
-      }}
-      onBlur={(event, editor) => {
-        console.log("Blur.", editor);
-      }}
-      onFocus={(event, editor) => {
-        console.log("Focus.", editor);
-      }}
-    />
+    <div>
+      <CKEditor
+       //@ts-ignore
+        editor={ClassicEditor}
+        data={onGetValues(name) as string}
+        onReady={(editor) => {
+          ref.current = editor;
+        }}
+        onChange={(event, editor) => {
+        //@ts-ignore
+          onSetValue(name, editor.getData());
+        }}
+        onBlur={(event, editor) => {
+          console.log("Blur.", editor);
+        }}
+        onFocus={(event, editor) => {
+          console.log("Focus.", editor);
+        }}
+      />
+    </div>
   );
 };
 
-export default Editor;
+export default MyEditor;

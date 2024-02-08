@@ -10,8 +10,6 @@ import {
   useWatch,
 } from "react-hook-form";
 import * as yup from "yup";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "ckeditor5-custom-build";
 import { Button } from "@mui/material";
 import { IProduct } from "@/app/product/[...slug]/page";
 import ControlledTextfield from "../controlledFields/ControlledTextfield";
@@ -27,7 +25,7 @@ import { enqueueSnackbar } from "notistack";
 import { api } from "@/app/lib/services/api.service";
 import dynamic from "next/dynamic";
 
-const Editor = dynamic(
+const MyEditor = dynamic(
   () => {
     return import("../Editor");
   },
@@ -103,8 +101,8 @@ const ProductForm = ({
     resolver: yupResolver<IProduct>(schema),
   });
 
-  const detailsEditorRef = useRef<ClassicEditor | null>(null);
-  const descriptionEditorRef = useRef<ClassicEditor | null>(null);
+  const detailsEditorRef = useRef<any | null>(null);
+  const descriptionEditorRef = useRef<any | null>(null);
 
   const {
     handleSubmit,
@@ -415,14 +413,14 @@ const ProductForm = ({
             </div>
           </div>
           <h1 className="text-xl">Description</h1>
-          <Editor
+          <MyEditor
             onGetValues={getValues}
             name="description"
             onSetValue={setValue}
             ref={descriptionEditorRef}
           />
           <h1 className="text-xl mb-2">Details</h1>
-          <Editor
+          <MyEditor
             name="details"
             onGetValues={getValues}
             onSetValue={setValue}
