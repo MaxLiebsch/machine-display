@@ -22,7 +22,7 @@
     "@types/react-image-gallery": "^1.2.4",
     "appwrite": "^13.0.1",
     "axios": "^1.6.7",
-    "ckeditor5-custom-build": "C:\\Users\\love\\mx\\ckeditor5-41.0.0-3phe40y0x527",
+    "ckeditor5-custom-build": "file:../ckeditor5-41.0.0-3phe40y0x527",
     "langchain": "^0.1.9",
     "mime-types": "^2.1.35",
     "nanoid": "^5.0.4",
