@@ -277,7 +277,8 @@ const ProductForm = ({
         >
           <div className="flex flex-row gap-3 items-center ml-auto absolute top-6 right-0 mt-2">
             {isSubmitting && <MyTimer duration={90} />}
-            <Button variant="outlined" type="submit">
+            <Button disabled={descriptionMutation.isPending ||
+                  detailsMutation.isPending} variant="outlined" type="submit">
               {isSubmitting && (
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary"
