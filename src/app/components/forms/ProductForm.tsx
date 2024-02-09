@@ -24,6 +24,7 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { api } from "@/app/lib/services/api.service";
 import dynamic from "next/dynamic";
+import MyTimer from "../atoms/Timer";
 
 const MyEditor = dynamic(
   () => {
@@ -44,6 +45,9 @@ const schema = yup.object({
   price: yup.string().required(),
   breadcrumbs: yup.array().required(),
   slug: yup.string().required(),
+  link: yup.object({
+    href: yup.string().required(),
+  }),
   images: yup.array().required(),
   description: yup.string().required(),
   details: yup.string().required(),
@@ -55,7 +59,7 @@ const ProductForm = ({
   onPageContentChange,
 }: IProductForm) => {
   const id = nanoid();
-  const { n, p, ps, m, img } = pageContent;
+  const { n, p, ps, m, img, link } = pageContent;
 
   const slug = function (str: string) {
     str = str.replace(/^\s+|\s+$/g, ""); // trim
@@ -95,6 +99,9 @@ const ProductForm = ({
           alt: "standard-" + i,
         };
       }),
+      link: {
+        href: link,
+      },
       description: "",
       details: "",
     },
@@ -263,7 +270,8 @@ const ProductForm = ({
           onSubmit={handleSubmit(onSubmit)}
           className="flex justify-between relative gap-2 flex-col"
         >
-          <div className="ml-auto absolute top-6 right-0 mt-2">
+          <div className="flex flex-row gap-3 items-center ml-auto absolute top-6 right-0 mt-2">
+            {isSubmitting && <MyTimer duration={90} />}
             <Button variant="outlined" type="submit">
               {isSubmitting && (
                 <svg

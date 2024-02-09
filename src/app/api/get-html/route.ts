@@ -24,7 +24,7 @@ suitable for direct inclusion in an HTML file. Exclude any JavaScript or JSX syn
 
 Consider the following steps and guidelines
 1. Clean up the product information 
-- remove all information about price, delivery, financing, product location,product id's,stock id's ,company information, contact information, services, transportation
+- remove all information about price, delivery, mascus, machineryline, mobile.de, financing, product location,any id, product id's,stock id's ,company information, contact information, services, transportation
 - only keep information directly related to the product
 2. All text strictly has to be in english
 
@@ -37,7 +37,7 @@ Write a up to 75 words product description for a website with the following prod
 
 Consider the following steps and guidelines
 1. Clean up the product information 
-- remove all information about price, delivery, financing, product location,product id's,stock id's , company information, contact information, services, transportation
+- remove all information about price, delivery, mascus, machineryline, mobile.de, financing, product location,any id,product id's,stock id's , company information, contact information, services, transportation
 - only keep information directly related to the product
 2. All text has to be in english`;
 

@@ -159,6 +159,9 @@ export interface IProduct {
   // href: string;
   breadcrumbs: Breadcrumb[];
   slug: string;
+  link: {
+    href: string;
+  }
   images: IImage[];
   description: string;
   // highlights?: string[];

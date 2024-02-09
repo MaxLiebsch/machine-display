@@ -8,6 +8,7 @@ import axios from "axios";
 import { PageContent } from "@/app/admin/page";
 import { enqueueSnackbar } from "notistack";
 import { api } from "@/app/lib/services/api.service";
+import MyTimer from "../atoms/Timer";
 
 interface IFormInput {
   link: string;
@@ -37,7 +38,7 @@ const CrawlPageForm = ({ onPageLoaded }: ICrawlPageForm) => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const details = await api.get("/product/crawl?link=" + data.link);
     if (details.status === 200) {
-      onPageLoaded(details.data.content);
+      onPageLoaded({ ...details.data.content, link: data.link });
     } else {
       enqueueSnackbar(
         "Crawl failed, maybe the link is not available or the domain is not supported"
@@ -53,7 +54,8 @@ const CrawlPageForm = ({ onPageLoaded }: ICrawlPageForm) => {
             className="w-full"
             name="link"
           />
-          <div className="ml-auto absolute -top-11 right-0">
+          <div className="flex flew-row items-center gap-3 ml-auto absolute -top-11 right-0">
+            {isSubmitting && <MyTimer duration={60} />}
             <Button disabled={isSubmitting} variant="outlined" type="submit">
               {isSubmitting && (
                 <svg

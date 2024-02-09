@@ -13,6 +13,7 @@ export interface PageContent {
   f: string; //features highlight
   pzn: string;
   m: string; //details
+  link: string;
   ps: string; //description
   ls: any[];
   ean: string;
@@ -55,6 +56,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       if (_pageContent) {
         setPageContent({
           p: "",
+          link: "",
           a: "",
           n: "",
           f: "", //features highlight
