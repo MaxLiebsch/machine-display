@@ -11,7 +11,7 @@ import { IImage } from "@/app/product/[...slug]/page";
 import { cookies, headers } from "next/headers";
 import { backendapi } from "@/app/lib/services/backenapi.service";
 
-const { CRAWLER_BE, IMAGOR_BASE_URL, WATERMARK_FILE, IMAGOR_SECRET } =
+const { IMAGOR_BASE_URL, WATERMARK_FILE, IMAGOR_SECRET } =
   process.env;
 
 export async function POST(request: NextRequest) {

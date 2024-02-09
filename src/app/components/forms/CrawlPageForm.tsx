@@ -39,6 +39,7 @@ const CrawlPageForm = ({ onPageLoaded }: ICrawlPageForm) => {
     const details = await api.get("/product/crawl?link=" + data.link);
     if (details.status === 200) {
       onPageLoaded({ ...details.data.content, link: data.link });
+      reset();
     } else {
       enqueueSnackbar(
         "Crawl failed, maybe the link is not available or the domain is not supported"

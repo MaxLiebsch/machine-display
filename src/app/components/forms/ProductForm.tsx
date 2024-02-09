@@ -152,6 +152,7 @@ const ProductForm = ({
       localStorage.removeItem("current");
       localStorage.removeItem("description");
       localStorage.removeItem("details");
+      reset();
       onProductPageCreated({ slug: getValues("slug"), success: true });
     },
     onError: () => {

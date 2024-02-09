@@ -77,10 +77,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8 pb-20">
       <div>
-        <h1 className="text-3xl mb-2">Crawler</h1>
-        <p>Enter a link you want to crawl.</p>
-        <CrawlPageForm onPageLoaded={setPageContent} />
-        {pageContent && (
+        {pageContent ? (
           <section className={`${!pageContent && "hidden"}`}>
             {productPageCreated?.success ? (
               <>
@@ -99,18 +96,32 @@ export default function Page({ params }: { params: { slug: string } }) {
                 >
                   Click here to see the result
                 </a>
-                <Button onClick={() => setProductPageCreated(undefined)}>
+                <Button
+                  onClick={() => {
+                    setProductPageCreated(undefined);
+                    setPageContent(undefined);
+                  }}
+                >
                   Add another product
                 </Button>
               </>
             ) : (
-              <ProductForm
-                onPageContentChange={setPageContent}
-                pageContent={pageContent}
-                onProductPageCreated={setProductPageCreated}
-              />
+              <>
+                <h2>Link: {pageContent.link}</h2>
+                <ProductForm
+                  onPageContentChange={setPageContent}
+                  pageContent={pageContent}
+                  onProductPageCreated={setProductPageCreated}
+                />
+              </>
             )}
           </section>
+        ) : (
+          <>
+            <h1 className="text-3xl mb-2">Crawler</h1>
+            <p>Enter a link you want to crawl.</p>
+            <CrawlPageForm onPageLoaded={setPageContent} />
+          </>
         )}
       </div>
     </div>
