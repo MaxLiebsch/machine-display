@@ -3,7 +3,7 @@ import { getAccount, getJWT } from "./appwrite.service";
 
 export const api = axios.create({
   baseURL: "api/",
-  timeout: 120000,
+  timeout: 1200000,
   validateStatus: function(status){
     return status >=200 && status <=500
   }
