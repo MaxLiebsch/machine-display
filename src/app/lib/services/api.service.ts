@@ -5,7 +5,7 @@ export const api = axios.create({
   baseURL: "api/",
   timeout: 1200000,
   validateStatus: function(status){
-    return status >=200 && status <=500
+    return status >=200 && status <=505
   }
 });
 

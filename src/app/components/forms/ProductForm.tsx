@@ -186,6 +186,10 @@ const ProductForm = ({
       });
       createItemMutation.mutate(product);
     } else {
+      enqueueSnackbar({
+        variant: "warning",
+        message: "Image fetching failed...",
+      });
     }
   };
 

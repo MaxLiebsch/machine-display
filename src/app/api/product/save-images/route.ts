@@ -9,12 +9,12 @@ import { sign } from "@/app/lib/sign";
 import mime from "mime-types";
 import { IImage } from "@/app/product/[...slug]/page";
 import { cookies, headers } from "next/headers";
+import { backendapi } from "@/app/lib/services/backenapi.service";
 
 const { CRAWLER_BE, IMAGOR_BASE_URL, WATERMARK_FILE, IMAGOR_SECRET } =
   process.env;
 
 export async function POST(request: NextRequest) {
-
   const jwt = headers().get("x-appwrite-user-jwt");
   if (!jwt) return new Response(null, { status: 401 });
 
@@ -30,15 +30,10 @@ export async function POST(request: NextRequest) {
   const { images, name } = body;
   for (let index = 0; index < images.length; index++) {
     const imageurl = images[index].original;
-    const details = await axios.get(
-      CRAWLER_BE + "/medications/get-image?link=" + imageurl,
+    const details = await backendapi.get(
+      "/medications/get-image?link=" + imageurl,
       {
-        responseType: "arraybuffer",
-        headers: {
-          Authorization:
-            "Basic " +
-            btoa(process.env.BE_USER_NAME + ":" + process.env.BE_PASSWORD),
-        },
+        responseType: "arraybuffer"
       }
     );
 
