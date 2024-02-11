@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const backendapi = axios.create({
   baseURL: process.env.CRAWLER_BE,
-  timeout: 60000,
+  timeout: 120000,
   validateStatus: function (status) {
     return status >= 200 && status <= 505;
   },

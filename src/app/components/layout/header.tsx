@@ -8,11 +8,11 @@ export default function Header() {
           <div className="flex">
             <div className="flex flex-shrink-0 items-center">
               <Image
-                width={45}
-                height={45}
+                width={125}
+                height={50}
                 className="w-auto"
                 src="/logo.png"
-                alt="DipMax Export"
+                alt="DipMax Machinery"
               />
             </div>
           </div>

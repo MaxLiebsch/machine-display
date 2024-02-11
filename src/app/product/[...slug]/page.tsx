@@ -27,8 +27,8 @@ export async function generateMetadata(
   // const previousImages = (await parent).openGraph?.images || []
 
   return {
-    title: product.documents[0].name,
-    description: product.documents[0].description,
+    title: product.documents[0]?.name,
+    description: product.documents[0]?.description,
   };
 }
 
@@ -96,7 +96,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <p className="text-3xl tracking-tight text-gray-900">
               {items.documents[0].price}
               <p className="mt-1 text-sm text-gray-500">
-                excl. €6,000 shipping and transport{" "}
+                excl. shipping and transport{" "}
               </p>
             </p>
 
@@ -159,6 +159,7 @@ export interface IProduct {
   // href: string;
   breadcrumbs: Breadcrumb[];
   slug: string;
+  published: boolean;
   link: {
     href: string;
   }

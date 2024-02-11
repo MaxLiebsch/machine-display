@@ -37,7 +37,7 @@ export const getItem = cache(async (slug: string) => {
   let promise = await databases.listDocuments(
     process.env.NEXT_PUBLIC_MACHINERY_DB_ID!,
     process.env.NEXT_PUBLIC_MACHINERY_COL_ID!,
-    [Query.equal("slug", slug)]
+    [Query.equal("slug", slug), Query.equal("published", true)]
   );
   return promise;
 });
@@ -51,6 +51,18 @@ export const createItem = cache(async (product: IProduct) => {
   );
   return promise;
 });
+
+export const updateItem = cache(
+  async (options: { product: Partial<IProduct>; id: string }) => {
+    let promise = await databases.updateDocument(
+      process.env.NEXT_PUBLIC_MACHINERY_DB_ID!,
+      process.env.NEXT_PUBLIC_MACHINERY_COL_ID!,
+      options.id,
+      options.product
+    );
+    return promise;
+  }
+);
 
 export const createFile = cache(async (file: File) => {
   let promise = await storage.createFile(

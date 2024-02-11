@@ -20,11 +20,14 @@ import {
   authenicatedFEClient,
   createItem,
   getJWT,
+  updateItem,
 } from "@/app/lib/services/appwrite.service";
 import { enqueueSnackbar } from "notistack";
 import { api } from "@/app/lib/services/api.service";
 import dynamic from "next/dynamic";
 import MyTimer from "../atoms/Timer";
+import { Models } from "appwrite";
+import { GiCheckMark } from "react-icons/gi";
 
 const MyEditor = dynamic(
   () => {
@@ -45,6 +48,7 @@ const schema = yup.object({
   price: yup.string().required(),
   breadcrumbs: yup.array().required(),
   slug: yup.string().required(),
+  published: yup.boolean().default(false),
   link: yup.object({
     href: yup.string().required(),
   }),
@@ -60,7 +64,7 @@ const ProductForm = ({
 }: IProductForm) => {
   const id = nanoid();
   const { n, p, ps, m, img, link } = pageContent;
-
+  const [completing, setCompleting] = useState<boolean>(false);
   const slug = function (str: string) {
     str = str.replace(/^\s+|\s+$/g, ""); // trim
     str = str.toLowerCase();
@@ -91,6 +95,7 @@ const ProductForm = ({
       // href: "",
       breadcrumbs: [{ id: 1, name: "Machinery", href: "#" }],
       slug: slug(n + "-" + id),
+      published: false,
       images: img.map((img, i) => {
         return {
           id: i.toString(),
@@ -145,52 +150,134 @@ const ProductForm = ({
     }
   }, [errors]);
 
-  const createItemMutation = useMutation({
-    mutationFn: createItem,
-    onSuccess: () => {
-      enqueueSnackbar({ variant: "info", message: "Product page created." });
-      localStorage.removeItem("current");
-      localStorage.removeItem("description");
-      localStorage.removeItem("details");
-      reset();
-      onProductPageCreated({ slug: getValues("slug"), success: true });
-    },
-    onError: () => {
+  // const imageMutation = useMutation({
+  //   mutationFn: (options)=>{
+  //     return api.post(
+  //       "/product/save-image",
+  //       {
+  //         image: options.image,
+  //         name: slug(name),
+  //         index,
+  //       },
+  //       {
+  //         headers: {
+  //           "x-appwrite-user-jwt": token,
+  //         },
+  //       }
+  //     )
+  //   },
+  //   onSuccess
+  // })
+
+  const handleOnSuccess = async (response: Models.Document) => {
+    setCompleting(true);
+    const productId = localStorage.getItem("productid");
+    if (!productId) {
       enqueueSnackbar({
         variant: "info",
-        message: "Creation of product page failed",
+        message: "Product page created. - " + response.$id,
+      });
+    }
+    const id = response.$id;
+    localStorage.setItem("productid", id);
+    const images = getValues("images");
+    const pendingImages = images.filter((image) => image.id.length < 20);
+    const uploadedImages = [];
+    const name = getValues("name");
+    const jwt = (await getJWT()).jwt;
+    for (let index = 0; index < pendingImages.length; index++) {
+      const image = pendingImages[index];
+      const imageres = await api.post(
+        "/product/save-image",
+        {
+          image,
+          name: slug(name),
+          index,
+        },
+        {
+          headers: {
+            "x-appwrite-user-jwt": jwt,
+          },
+        }
+      );
+      if (imageres.status === 200) {
+        uploadedImages.push(imageres.data.content.image);
+        const uploadedImageIndex = images.findIndex(
+          (image) => image.original === imageres.data.content.original
+        );
+        if (uploadedImageIndex !== -1) {
+          images[uploadedImageIndex] = imageres.data.content.image;
+        }
+        setValue("images", images);
+        enqueueSnackbar({
+          variant: "info",
+          message: `Uploaded ${index + 1} from ${pendingImages.length}`,
+        });
+      } else {
+        enqueueSnackbar({
+          variant: "warning",
+          message: imageres.data.content,
+        });
+      }
+    }
+    updateItem({
+      product: {
+        images: uploadedImages,
+        published: true,
+      },
+      id,
+    })
+      .then((response) => {
+        setCompleting(false);
+        localStorage.removeItem("current");
+        localStorage.removeItem("description");
+        localStorage.removeItem("productid");
+        localStorage.removeItem("details");
+        onProductPageCreated({ slug: response.slug, success: true });
+        reset();
+      })
+      .catch((error) => {
+        enqueueSnackbar({
+          variant: "warning",
+          message: error.message,
+        });
+      });
+  };
+
+  const createItemMutation = useMutation({
+    mutationFn: createItem,
+    onSuccess: handleOnSuccess,
+    onError: (error) => {
+      enqueueSnackbar({
+        variant: "warning",
+        message: error.message,
+      });
+    },
+  });
+
+  const updateItemMutation = useMutation({
+    mutationFn: updateItem,
+    onSuccess: handleOnSuccess,
+    onError: (error) => {
+      enqueueSnackbar({
+        variant: "warning",
+        message: error.message,
       });
     },
   });
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
-    enqueueSnackbar({ variant: "info", message: "Downloading images..." });
-    const token = (await getJWT()).jwt;
-    authenicatedFEClient(token);
-    const imageres = await api.post(
-      "/product/save-images",
-      {
-        images: data.images,
-        name: slug(data.name),
-      },
-      {
-        headers: {
-          "x-appwrite-user-jwt": token,
+    const productId = localStorage.getItem("productid");
+    if (productId) {
+      updateItemMutation.mutate({
+        product: {
+          ...data,
+          images: data.images.filter((image) => image.id.length === 20),
         },
-      }
-    );
-    if (imageres.status === 200) {
-      const product = { ...data, images: imageres.data.content };
-      enqueueSnackbar({
-        variant: "info",
-        message: "Generating product page...",
+        id: productId,
       });
-      createItemMutation.mutate(product);
     } else {
-      enqueueSnackbar({
-        variant: "warning",
-        message: "Image fetching failed...",
-      });
+      createItemMutation.mutate({ ...data, images: [] });
     }
   };
 
@@ -276,10 +363,15 @@ const ProductForm = ({
           className="flex justify-between relative gap-2 flex-col"
         >
           <div className="flex flex-row gap-3 items-center ml-auto absolute top-6 right-0 mt-2">
-            {isSubmitting && <MyTimer duration={90} />}
-            <Button disabled={descriptionMutation.isPending ||
-                  detailsMutation.isPending} variant="outlined" type="submit">
-              {isSubmitting && (
+            {isSubmitting || completing && <MyTimer duration={90} />}
+            <Button
+              disabled={
+                descriptionMutation.isPending || detailsMutation.isPending || completing
+              }
+              variant="outlined"
+              type="submit"
+            >
+              {isSubmitting || completing && (
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary"
                   xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +393,9 @@ const ProductForm = ({
                   />
                 </svg>
               )}
-              Create Page
+              {localStorage.getItem("productid")
+                ? "Complete Page"
+                : "Create Page"}
             </Button>
           </div>
           <h1 className="text-3xl mt-8">Product Information</h1>
@@ -448,21 +542,15 @@ const ProductForm = ({
                 key={i}
                 {...register(`images.${i}`)}
               >
+                {img.id.length === 20 && (
+                  <div className="absolute w-full h-full top-0 grid grid-rows-1">
+                    <GiCheckMark className="absolute z-30 place-self-center" />
+                    <div className="bg-white opacity-70 w-full h-full"></div>
+                  </div>
+                )}
                 <div className="bg-white absolute top-0 right-0">
                   <Button
-                    onClick={async () => {
-                      const result = await axios.post(
-                        "/api/product/save-images",
-                        {
-                          images: [img.original],
-                        }
-                      );
-                      console.log("result:", result);
-                    }}
-                  >
-                    save
-                  </Button>
-                  <Button
+                    disabled={img.id.length === 20}
                     onClick={() => {
                       remove(i);
                     }}
