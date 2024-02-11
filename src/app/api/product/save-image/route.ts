@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
           `100x66/filters:watermark(${watermarkUrl},0,57):format(webp)/${filename}`,
           IMAGOR_SECRET!
         );
+
       return Response.json(
         {
           content: {
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
               original: originalUrlHashed,
               thumbnail: thumbnailUrlHashed,
               id: _response.$id,
-              alt: `Machine Image for ${name}`,
+              alt: `Image for ${name}`.slice(0,59),
             },
             original: imageurl,
           },
