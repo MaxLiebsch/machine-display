@@ -13,26 +13,18 @@ export async function middleware(request: NextRequest) {
     } else {
       ip = "unknown";
     }
-    console.log('ip:', ip)
+    console.log("ip:", ip);
 
-    const lookup = await(
-      await fetch(
-        process.env.NEXT_PUBLIC_FE_BASEURL! + "/api/ipinfo/" + ip
-      )
+    const lookup = await (
+      await fetch(process.env.NEXT_PUBLIC_FE_BASEURL! + "/api/ipinfo/" + ip)
     ).json();
-    
-    if(lookup.error === 'ip not found'){
-      return NextResponse.redirect(process.env.NEXT_PUBLIC_FE_BASEURL! + '/');
-    }
 
-    if(lookup.city_name === 'Berlin'){
-      const response = NextResponse.next();
-      return response;
-    }
-
-    if(lookup.iso_code === 'BD'){
-      const response = NextResponse.next();
-      return response;
+    if (
+      lookup.error === "ip not found" ||
+      lookup.city_name !== "Berlin" ||
+      lookup.iso_code !== "BD"
+    ) {
+      return NextResponse.redirect(process.env.NEXT_PUBLIC_FE_BASEURL! + "/");
     }
   } else {
     const response = NextResponse.next();
