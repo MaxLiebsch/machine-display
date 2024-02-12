@@ -3,7 +3,7 @@ import { Client, ID, Storage } from "node-appwrite";
 import { cache } from "react";
 import { InputFile } from "node-appwrite";
 
-const client = new Client();
+export const client = new Client();
 
 client
   .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_URL!)

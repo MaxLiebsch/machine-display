@@ -1,38 +1,41 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+export async function middleware(request: NextRequest) {
+  const url = request.url;
+  if (url.includes("/product")) {
+    let ip;
+    const xForwardedFor = request.headers.get("x-forwarded-for");
+    const xRealIp = request.headers.get("x-real-ip");
+    if (xForwardedFor) {
+      ip = xForwardedFor.split(",")[0];
+    } else if (xRealIp) {
+      ip = xRealIp;
+    } else {
+      ip = "unknown";
+    }
+    console.log('ip:', ip)
 
+    const lookup = await(
+      await fetch(
+        process.env.NEXT_PUBLIC_FE_BASEURL! + "/api/ipinfo/" + ip
+      )
+    ).json();
+    
+    if(lookup.error === 'ip not found'){
+      return NextResponse.redirect(process.env.NEXT_PUBLIC_FE_BASEURL! + '/');
+    }
 
-export function middleware(request: NextRequest) {
+    if(lookup.city_name === 'Berlin'){
+      const response = NextResponse.next();
+      return response;
+    }
 
-  const cookie = request.cookies.get(`a_session_${process.env.NEXT_PUBLIC_PROJECT_ID}_legacy`);
-
-
-//   if(cookie){
-//     console.log(request)
-//   }
-
-  // Assume a "Cookie:nextjs=fast" header to be present on the incoming request
-  // Getting cookies from the request using the `RequestCookies` API
-  //   let cookie = request.cookies.get('nextjs')
-  //   console.log(cookie) // => { name: 'nextjs', value: 'fast', Path: '/' }
-  //   const allCookies = request.cookies.getAll()
-  //   console.log(allCookies) // => [{ name: 'nextjs', value: 'fast' }]
-
-  //   request.cookies.has('nextjs') // => true
-  //   request.cookies.delete('nextjs')
-  //   request.cookies.has('nextjs') // => false
-
-  //   // Setting cookies on the response using the `ResponseCookies` API
-    const response = NextResponse.next()
-  //   response.cookies.set('vercel', 'fast')
-  //   response.cookies.set({
-  //     name: 'vercel',
-  //     value: 'fast',
-  //     path: '/',
-  //   })
-  //   cookie = response.cookies.get('vercel')
-  //   console.log(cookie) // => { name: 'vercel', value: 'fast', Path: '/' }
-  //   // The outgoing response will have a `Set-Cookie:vercel=fast;path=/` header.
-
-  return response;
+    if(lookup.iso_code === 'BD'){
+      const response = NextResponse.next();
+      return response;
+    }
+  } else {
+    const response = NextResponse.next();
+    return response;
+  }
 }

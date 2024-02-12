@@ -2758,6 +2758,14 @@ lru-cache@^6.0.0:
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-10.2.0.tgz"
   integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
 
+maxmind@^4.3.18:
+  version "4.3.18"
+  resolved "https://registry.yarnpkg.com/maxmind/-/maxmind-4.3.18.tgz#ad83f38d718ca5395c5d722933a109b7cb009226"
+  integrity sha512-5b9utU7ZxcGYTBaO7hCF0FXyfw3IpankLn+FnLW4RZS1zi97RBeSdfXJFJlk5UxNsMiFZlsdMT3lzvD+bD8MLQ==
+  dependencies:
+    mmdb-lib "2.1.0"
+    tiny-lru "11.2.5"
+
 md5@^2.3.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/md5/-/md5-2.3.0.tgz"
@@ -2851,6 +2859,11 @@ ml-tree-similarity@^1.0.0:
   dependencies:
     binary-search "^1.3.5"
     num-sort "^2.0.0"
+
+mmdb-lib@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mmdb-lib/-/mmdb-lib-2.1.0.tgz#c2456caaf4c7ffa056f77575da6d40988e9e878b"
+  integrity sha512-tdDTZmnI5G4UoSctv2KxM/3VQt2XRj4CmR5R4VsAWsOUcS3LysHR34wtixWm/pXxXdkBDuN92auxkC0T2+qd1Q==
 
 ms@2.1.2:
   version "2.1.2"
@@ -3545,6 +3558,7 @@ streamsearch@^1.1.0:
   integrity sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==
 
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0:
+  name string-width-cjs
   version "4.2.3"
   resolved "https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -3728,6 +3742,11 @@ tiny-case@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/tiny-case/-/tiny-case-1.0.3.tgz"
   integrity sha512-Eet/eeMhkO6TX8mnUteS9zgPbUMQa4I6Kkp5ORiBD5476/m+PIRiumP5tmh5ioJpH7k51Kehawy2UDfsnxxY8Q==
+
+tiny-lru@11.2.5:
+  version "11.2.5"
+  resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-11.2.5.tgz#b138b99022aa26c567fa51a8dbf9e3e2959b2b30"
+  integrity sha512-JpqM0K33lG6iQGKiigcwuURAKZlq6rHXfrgeL4/I8/REoyJTGU+tEMszvT/oTRVHG2OiylhGDjqPp1jWMlr3bw==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"
