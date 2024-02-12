@@ -1,6 +1,5 @@
 import { PageContent } from "@/app/admin/page";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
   FormProvider,
@@ -17,7 +16,6 @@ import { nanoid } from "nanoid";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import {
-  authenicatedFEClient,
   createItem,
   getJWT,
   updateItem,
@@ -171,7 +169,7 @@ const ProductForm = ({
 
   const handleOnSuccess = async (response: Models.Document) => {
     setCompleting(true);
-    const productId = localStorage.getItem("productid");
+    const productId = sessionStorage.getItem("productid");
     if (!productId) {
       enqueueSnackbar({
         variant: "info",
@@ -179,7 +177,7 @@ const ProductForm = ({
       });
     }
     const id = response.$id;
-    localStorage.setItem("productid", id);
+    sessionStorage.setItem("productid", id);
     const images = getValues("images");
     const pendingImages = images.filter((image) => image.id.length < 20);
     const uploadedImages = [];
@@ -229,10 +227,10 @@ const ProductForm = ({
     })
       .then((response) => {
         setCompleting(false);
-        localStorage.removeItem("current");
-        localStorage.removeItem("description");
-        localStorage.removeItem("productid");
-        localStorage.removeItem("details");
+        sessionStorage.removeItem("current");
+        sessionStorage.removeItem("description");
+        sessionStorage.removeItem("productid");
+        sessionStorage.removeItem("details");
         onProductPageCreated({ slug: response.slug, success: true });
         reset();
       })
@@ -267,7 +265,7 @@ const ProductForm = ({
   });
 
   const onSubmit: SubmitHandler<IProduct> = async (data) => {
-    const productId = localStorage.getItem("productid");
+    const productId = sessionStorage.getItem("productid");
     if (productId) {
       updateItemMutation.mutate({
         product: {
@@ -290,7 +288,7 @@ const ProductForm = ({
       const content = data.html;
       const key = variables.type === "html" ? "details" : "description";
       detailsEditorRef.current && detailsEditorRef.current.setData(content);
-      localStorage.setItem("details", "true");
+      sessionStorage.setItem("details", "true");
       setValue(key, content);
     },
   });
@@ -305,7 +303,7 @@ const ProductForm = ({
     },
     onSuccess: (data, variables) => {
       const content = data.html;
-      localStorage.setItem("description", "true");
+      sessionStorage.setItem("description", "true");
       const key = variables.type === "html" ? "details" : "description";
       descriptionEditorRef.current &&
         descriptionEditorRef.current.setData(content);
@@ -322,11 +320,11 @@ const ProductForm = ({
   useEffect(() => {
     const values = getValues();
     values.name !== "" &&
-      localStorage.setItem("current", JSON.stringify(values));
+      sessionStorage.setItem("current", JSON.stringify(values));
   }, [allFields]);
 
   useEffect(() => {
-    const current = localStorage.getItem("current");
+    const current = sessionStorage.getItem("current");
     if (current) {
       const parsed = JSON.parse(current) as IProduct;
       type keys = keyof IProduct;
@@ -337,8 +335,8 @@ const ProductForm = ({
   }, []);
 
   useEffect(() => {
-    const description = localStorage.getItem("description");
-    const details = localStorage.getItem("details");
+    const description = sessionStorage.getItem("description");
+    const details = sessionStorage.getItem("details");
     if (ps !== "" && m !== "") {
       !details && detailsMutation.mutate({ text: ps + " " + m, type: "html" });
       !description &&
@@ -393,7 +391,7 @@ const ProductForm = ({
                   />
                 </svg>
               )}
-              {localStorage.getItem("productid")
+              {sessionStorage.getItem("productid")
                 ? "Complete Page"
                 : "Create Page"}
             </Button>

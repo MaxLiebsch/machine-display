@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   const details = await backendapi.post(
     "/medications/get-product-infos/shop/no-need",
     { link }
-  );
+    );
   if (details.status === 201) {
     return Response.json({ content: details.data }, { status: 200 });
   } else {

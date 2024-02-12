@@ -52,7 +52,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   useEffect(() => {
     if (!pageContent) {
-      const _pageContent = localStorage.getItem("current");
+      const _pageContent = sessionStorage.getItem("current");
       if (_pageContent) {
         setPageContent({
           p: "",
