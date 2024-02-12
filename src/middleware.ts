@@ -17,7 +17,9 @@ export async function middleware(request: NextRequest) {
 
     const lookup = await (
       await fetch(process.env.NEXT_PUBLIC_FE_BASEURL! + "/api/ipinfo/" + ip)
-    ).json();
+      ).json();
+    
+    console.log('lookup:', lookup)
 
     if (
       lookup.error === "ip not found" ||
