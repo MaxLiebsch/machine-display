@@ -316,6 +316,14 @@ const ProductForm = ({
   });
   const allFields = watch();
   const name = watch("name");
+  const price = watch("price");
+
+  useEffect(() => {
+    if (parseInt(price)) {
+      const parsedPrice = parsePrice(price);
+      if (parsedPrice) setValue("price", formatter.format(parsedPrice));
+    }
+  }, [price]);
 
   useEffect(() => {
     setValue("slug", slug(name + "-" + id));
@@ -425,7 +433,7 @@ const ProductForm = ({
                 name="name"
               />
               <div className="relative">
-                <div className="grid grid-rows-2 grid-flow-col -top-1 absolute h-16 w-full">
+                <div className="grid grid-rows-2 grid-flow-col gap-8 -top-4 -left-3 absolute h-16 w-full">
                   {[
                     { text: "10%", percentage: 1.1 },
                     { text: "15%", percentage: 1.15 },
