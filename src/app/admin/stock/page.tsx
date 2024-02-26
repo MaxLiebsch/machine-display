@@ -24,28 +24,31 @@ import React, { useEffect, useState } from "react";
 LicenseInfo.setLicenseKey(
   "e25030cfe0235dfde76a01f60b5bf883Tz00ODA0NixFPTE4OTM0NTI0MDAwMDAsUz1wcmVtaXVtLExNPXN1YnNjcmlwdGlvbixLVj0y"
 );
+
+const PAGE_SIZE = 3;
 const Stock = () => {
   const [stock, setStock] = useState<Row[]>([]);
-  const databaseId = process.env.NEXT_PUBLIC_MACHINERY_DB_ID!;
-  const collectionId = process.env.NEXT_PUBLIC_MACHINERY_COL_ID!;
+  const [rowCount, setRowCount] = useState<number>(0);
+  const [lastId, setLastId] = useState<string>();
 
   const items = useQuery({
-    queryKey: ["items"],
+    queryKey: ["items", lastId],
+
     queryFn: async () => {
       const jwt = await getJWT();
       if (jwt) authenicatedFEClient(jwt.jwt);
-      return await getItems();
+      return await getItems(PAGE_SIZE, lastId);
     },
   });
 
   useEffect(() => {
     if (items.data) {
+      setRowCount(items.data.total);
       setStock(items.data.documents as Row[]);
     }
   }, [items.data]);
 
   const handleDelete = async (row: Row) => {
-    console.log("row:", row);
     if (row.images.length > 0) {
       await Promise.all(
         row.images.map(async (image) => {
@@ -61,52 +64,52 @@ const Stock = () => {
       .catch(() => {
         enqueueSnackbar({ message: `Deletion for ${row.name} failed` });
       });
-    };
-    
-    const columns: GridColDef<Row>[] = [
-      { field: "name", headerName: "Name", width: 250 },
-      {
-        field: "$createdAt",
-        headerName: "Created",
-        width: 100,
-        valueFormatter: (params) => {
-          return format(parseISO(params.value), "P");
-        },
+  };
+
+  const columns: GridColDef<Row>[] = [
+    { field: "name", headerName: "Name", width: 250 },
+    {
+      field: "$createdAt",
+      headerName: "Created",
+      width: 100,
+      valueFormatter: (params) => {
+        return format(parseISO(params.value), "P");
       },
-      {
-        field: "our-link",
-        headerName: "Our Link",
-        width: 75,
-        renderCell: (params) => {
-          if (params.row.slug)
-            return (
-              <Link
-                target="_blank"
-                href={
-                  process.env.NEXT_PUBLIC_FE_BASEURL +
-                  "/product/" +
-                  params.row.slug
-                }
-              >
-                Visit
-              </Link>
-            );
-        },
+    },
+    {
+      field: "our-link",
+      headerName: "Our Link",
+      width: 75,
+      renderCell: (params) => {
+        if (params.row.slug)
+          return (
+            <Link
+              target="_blank"
+              href={
+                process.env.NEXT_PUBLIC_FE_BASEURL +
+                "/product/" +
+                params.row.slug
+              }
+            >
+              Visit
+            </Link>
+          );
       },
-      {
-        field: "link",
-        headerName: "Link",
-        width: 60,
-        renderCell: (params) => {
-          if (params.row.link)
-            return (
-              <Link target="_blank" href={params.row.link.href}>
-                Visit
-              </Link>
-            );
-        },
+    },
+    {
+      field: "link",
+      headerName: "Link",
+      width: 60,
+      renderCell: (params) => {
+        if (params.row.link)
+          return (
+            <Link target="_blank" href={params.row.link.href}>
+              Visit
+            </Link>
+          );
       },
-      { field: "slug", headerName: "Slug", width: 220 },
+    },
+    { field: "slug", headerName: "Slug", width: 220 },
     { field: "description", headerName: "Description", width: 200 },
     {
       field: "price",
@@ -159,7 +162,24 @@ const Stock = () => {
     <AuthProvider>
       <div className="flex overflow-y-scroll h-[calc(100vh-280px)] ">
         <DataGridPremium
+          initialState={{
+            pagination: { paginationModel: { pageSize: PAGE_SIZE } },
+          }}
+          pageSizeOptions={[PAGE_SIZE]}
+          onPaginationModelChange={(model) => {
+            if (model.page !== 0 && items.data) {
+              const lastId =
+                items.data.documents[items.data.documents.length - 1].$id;
+              setLastId(lastId);
+            } else {
+              setLastId(undefined);
+            }
+          }}
+          rowCount={rowCount}
+          paginationMode="server"
+          loading={items.isLoading}
           getRowId={(row) => row.$id}
+          pagination
           rows={stock}
           columns={columns}
         />

@@ -43,11 +43,17 @@ export const getItem = cache(async (slug: string) => {
   return promise;
 });
 
-export const getItems = cache(async () => {
+export const getItems = cache(async (limit: number, lastId?: string) => {
+  const query = [Query.limit(limit)];
+  
+  if(lastId){
+       query.push(Query.cursorAfter(lastId))
+  }
+
   let promise = await databases.listDocuments(
     process.env.NEXT_PUBLIC_MACHINERY_DB_ID!,
     process.env.NEXT_PUBLIC_MACHINERY_COL_ID!,
-    []
+    query
   );
   return promise;
 });
