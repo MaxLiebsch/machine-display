@@ -25,7 +25,7 @@ LicenseInfo.setLicenseKey(
   "e25030cfe0235dfde76a01f60b5bf883Tz00ODA0NixFPTE4OTM0NTI0MDAwMDAsUz1wcmVtaXVtLExNPXN1YnNjcmlwdGlvbixLVj0y"
 );
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 25;
 const Stock = () => {
   const [stock, setStock] = useState<Row[]>([]);
   const [rowCount, setRowCount] = useState<number>(0);
