@@ -5,6 +5,8 @@ import Header from "./components/layout/header";
 import Footer from "./components/layout/Footer";
 import ReactQueryProvider from "./lib/providers/ReactQueryProvider";
 import SnackProvider from "./lib/providers/SnackBarProvider";
+import AppWriteProvider from "./lib/providers/AppWriteProvider";
+import MyLocalisationProvider from "./lib/providers/LocalisationProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,13 +24,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReactQueryProvider>
-          <SnackProvider>
-            <Header />
-            <main className="pt-20">{children}</main>
-            <Footer />
-          </SnackProvider>
-        </ReactQueryProvider>
+        <MyLocalisationProvider>
+        <AppWriteProvider>
+          <ReactQueryProvider>
+            <SnackProvider>
+              <Header />
+              <main className="pt-20">{children}</main>
+              <Footer />
+            </SnackProvider>
+          </ReactQueryProvider>
+        </AppWriteProvider>
+        </MyLocalisationProvider>
       </body>
     </html>
   );

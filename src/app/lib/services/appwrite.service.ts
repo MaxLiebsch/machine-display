@@ -2,6 +2,7 @@ import { SignInData } from "@/app/components/forms/SignInForm";
 import { IProduct } from "@/app/product/[...slug]/page";
 import { Account, Client, Databases, ID, Query, Storage } from "appwrite";
 import { cache } from "react";
+import { AppwriteNextServer } from "react-appwrite/next";
 
 const client = new Client();
 
@@ -42,6 +43,15 @@ export const getItem = cache(async (slug: string) => {
   return promise;
 });
 
+export const getItems = cache(async () => {
+  let promise = await databases.listDocuments(
+    process.env.NEXT_PUBLIC_MACHINERY_DB_ID!,
+    process.env.NEXT_PUBLIC_MACHINERY_COL_ID!,
+    []
+  );
+  return promise;
+});
+
 export const createItem = cache(async (product: IProduct) => {
   let promise = await databases.createDocument(
     process.env.NEXT_PUBLIC_MACHINERY_DB_ID!,
@@ -64,6 +74,15 @@ export const updateItem = cache(
   }
 );
 
+export const deleteItem = cache(async (id: string) => {
+  let promise = await databases.deleteDocument(
+    process.env.NEXT_PUBLIC_MACHINERY_DB_ID!,
+    process.env.NEXT_PUBLIC_MACHINERY_COL_ID!,
+    id
+  );
+  return promise;
+});
+
 export const createFile = cache(async (file: File) => {
   let promise = await storage.createFile(
     process.env.NEXT_PUBLIC_IMAGE_BUCKET!,
@@ -71,4 +90,17 @@ export const createFile = cache(async (file: File) => {
     file
   );
   return promise;
+});
+export const deleteFile = cache(async (fileid: string) => {
+  let promise = await storage.deleteFile(
+    process.env.NEXT_PUBLIC_IMAGE_BUCKET!,
+    fileid
+  );
+  return promise;
+});
+
+export const appwrite = new AppwriteNextServer({
+  url: process.env.NEXT_PUBLIC_APPWRITE_URL!,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
+  key: process.env.APPWRITE_API!,
 });

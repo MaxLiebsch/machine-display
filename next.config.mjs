@@ -20,7 +20,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn.dipmaxexport.com",
+        hostname: "*",
         port: "",
         pathname: "/**",
       },
@@ -36,7 +36,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
-      {
+       {
+        protocol: "https",
+        hostname: "mascus.de",
+        port: "",
+        pathname: "/**",
+      },{
         protocol: "https",
         hostname: "st.mascus.com",
         port: "",

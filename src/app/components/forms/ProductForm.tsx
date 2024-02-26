@@ -34,6 +34,14 @@ const MyEditor = dynamic(
   { ssr: false }
 );
 
+const buttonSx = {
+  maxHeight: 20,
+  minHeight: 20,
+  p: 0,
+  minWidth: 20,
+  maxWidth: 20,
+};
+
 interface IProductForm {
   onProductPageCreated: Dispatch<
     SetStateAction<{ slug: string; success: boolean } | undefined>
@@ -284,7 +292,7 @@ const ProductForm = ({
   };
 
   const detailsMutation = useMutation({
-    mutationFn: (variables: { text: string; type: "html" | "text" }) => {
+    mutationFn: async (variables: { text: string; type: "html" | "text" }) => {
       enqueueSnackbar({ variant: "info", message: "Generating details..." });
       return api.post("/get-html", variables).then((res) => res.data);
     },
@@ -298,7 +306,7 @@ const ProductForm = ({
   });
 
   const descriptionMutation = useMutation({
-    mutationFn: (variables: { text: string; type: "html" | "text" }) => {
+    mutationFn: async (variables: { text: string; type: "html" | "text" }) => {
       enqueueSnackbar({
         variant: "info",
         message: "Generating description...",
@@ -349,11 +357,9 @@ const ProductForm = ({
   useEffect(() => {
     const description = sessionStorage.getItem("description");
     const details = sessionStorage.getItem("details");
-    if (ps !== "" && m !== "") {
-      !details && detailsMutation.mutate({ text: ps + " " + m, type: "html" });
-      !description &&
-        descriptionMutation.mutate({ text: ps + " " + m, type: "text" });
-    }
+    !description &&
+      descriptionMutation.mutate({ text: ps + " " + m, type: "text" });
+    !details && detailsMutation.mutate({ text: ps + " " + m, type: "html" });
   }, [pageContent]);
 
   const parsePrice = (priceStr: string | undefined) => {
@@ -572,6 +578,28 @@ const ProductForm = ({
                   </div>
                 )}
                 <div className="bg-white absolute top-0 right-0">
+                  {/* Move left */}
+                  <Button
+                    sx={buttonSx}
+                    type="button"
+                    disabled={i === 0}
+                    variant="outlined"
+                    color="warning"
+                    onClick={() => swap(i, i + 1)}
+                  >
+                    {"<"}
+                  </Button>
+                  {/* Move right */}
+                  <Button
+                    sx={buttonSx}
+                    disabled={i === getValues("images")?.length - 1}
+                    type="button"
+                    variant="outlined"
+                    color="warning"
+                    onClick={() => swap(i + 1, i)}
+                  >
+                    {">"}
+                  </Button>
                   <Button
                     disabled={img.id.length === 20}
                     onClick={() => {

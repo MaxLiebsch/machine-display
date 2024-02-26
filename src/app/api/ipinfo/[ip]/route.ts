@@ -8,7 +8,7 @@ export async function GET(
   if (!params?.ip) {
     return Response.json({ error: "ip missing" }, { status: 400 });
   }
-  const lookup = (await SingletonReader.getReader()).get(params.ip);
+  const lookup = (await SingletonReader.getReader()).get(params.ip); 
   if (!lookup) {
     return Response.json({ error: "ip not found" }, { status: 400 });
   }

@@ -1,5 +1,3 @@
-import { getItem } from "../lib/services/appwrite.service";
-
 export default async function Layout({
   params: { slug },
   modal,
@@ -9,5 +7,7 @@ export default async function Layout({
   modal: any,
   children: React.ReactNode;
 }) {
+
+  
   return <section>{children}</section>;
 }

@@ -36,7 +36,7 @@ const SignInForm = () => {
     const session = getEmailSession(data);
     session
       .then((session) => {
-        router.push("/admin");
+        router.push("/admin/new-product");
       })
       .catch((error) => {
         if (error instanceof AppwriteException) {
@@ -48,7 +48,7 @@ const SignInForm = () => {
   useEffect(() => {
     getSession()
       .then((session) => {
-        router.push("/admin");
+        router.push("/admin/new-product");
       })
       .catch((error) => {
         console.log("error:", error);

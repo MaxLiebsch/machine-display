@@ -22,7 +22,6 @@ export async function generateMetadata(
 
   // fetch data
   const product = await getItem(params.slug);
-
   // optionally access and extend (rather than replace) parent metadata
   // const previousImages = (await parent).openGraph?.images || []
 
@@ -39,7 +38,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   }
   return (
     <div className="bg-white">
-      <div className="pt-6 px-2">
+      <div className="pt-6 sm:px-2 pb-16">
         <nav aria-label="Breadcrumb">
           <ol
             role="list"

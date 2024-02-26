@@ -1,9 +1,9 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
-import CrawlPageForm from "../components/forms/CrawlPageForm";
-import ProductForm from "../components/forms/ProductForm";
-import AuthProvider from "../lib/providers/AuthProvider";
+import CrawlPageForm from "../../components/forms/CrawlPageForm";
+import ProductForm from "../../components/forms/ProductForm";
 import { Button } from "@mui/material";
+import AuthProvider from "../../lib/providers/AuthProvider";
 
 export interface PageContent {
   p: string;
@@ -54,22 +54,24 @@ export default function Page({ params }: { params: { slug: string } }) {
           {pageContent ? (
             <section className={`${!pageContent && "hidden"}`}>
               {productPageCreated?.success ? (
-                <>
-                  <h1 className="text-3xl mt-8">
-                    Product page is created successfully
-                  </h1>
-                  <p className="my-2">
-                    URL:{" "}
-                    {`${process.env.NEXT_PUBLIC_FE_BASEURL}/product/${productPageCreated?.slug}`}
-                  </p>
+                <div>
+                  <div>
+                    <h1 className="text-3xl mt-8">
+                      Product page is created successfully
+                    </h1>
+                    <p className="my-2">
+                      URL:{" "}
+                      {`${process.env.NEXT_PUBLIC_FE_BASEURL}/product/${productPageCreated?.slug}`}
+                    </p>
 
-                  <a
-                    target="_blank"
-                    className="mt-4 text-2xl underline-1"
-                    href={`${process.env.NEXT_PUBLIC_FE_BASEURL}/product/${productPageCreated?.slug}`}
-                  >
-                    Click here to see the result
-                  </a>
+                    <a
+                      target="_blank"
+                      className="mt-4 text-2xl underline-1"
+                      href={`${process.env.NEXT_PUBLIC_FE_BASEURL}/product/${productPageCreated?.slug}`}
+                    >
+                      Click here to see the result
+                    </a>
+                  </div>
                   <Button
                     onClick={() => {
                       setProductPageCreated(undefined);
@@ -78,7 +80,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                   >
                     Add another product
                   </Button>
-                </>
+                </div>
               ) : (
                 <>
                   <h2>Link: {pageContent.link}</h2>
@@ -92,13 +94,6 @@ export default function Page({ params }: { params: { slug: string } }) {
             </section>
           ) : (
             <>
-              <header>
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-                    New Product
-                  </h1>
-                </div>
-              </header>
               <p>Enter a link you want to crawl.</p>
               <CrawlPageForm onPageLoaded={setPageContent} />
             </>

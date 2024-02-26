@@ -1,22 +1,15 @@
 import { backendapi } from "@/app/lib/services/backenapi.service";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
-import * as yup from "yup";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const jwt = headers().get("x-appwrite-user-jwt");
   if (!jwt) return new Response(null, { status: 401 });
 
-  const searchParams = request.nextUrl.searchParams;
-  const link = searchParams.get("link");
-  const schema = yup.string().url();
-  if (!schema.cast(link)) {
+  if (!request.body) {
     return new Response(null, { status: 400 });
   }
-  const details = await backendapi.post(
-    "/medications/get-product-infos/shop/no-need",
-    { link }
-    );
+  const details = await backendapi.post("/medications/queryShop", await request.json()); 
   if (details.status === 201) {
     return Response.json({ content: details.data }, { status: 200 });
   } else {

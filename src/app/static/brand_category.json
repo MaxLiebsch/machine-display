@@ -1,0 +1,414 @@
+[
+    {
+        "value": "ABG",
+        "key": "200"
+    },
+    {
+        "value": "Ahlmann",
+        "key": "600"
+    },
+    {
+        "value": "Ammann",
+        "key": "1350"
+    },
+    {
+        "value": "Atlas",
+        "key": "1800"
+    },
+    {
+        "value": "Atlas Copco",
+        "key": "144"
+    },
+    {
+        "value": "AUSA",
+        "key": "77"
+    },
+    {
+        "value": "Avant Tecno",
+        "key": "166"
+    },
+    {
+        "value": "Bell",
+        "key": "2866"
+    },
+    {
+        "value": "Bergmann",
+        "key": "3150"
+    },
+    {
+        "value": "Bobcat",
+        "key": "3600"
+    },
+    {
+        "value": "BOMAG",
+        "key": "3700"
+    },
+    {
+        "value": "Case",
+        "key": "5100"
+    },
+    {
+        "value": "CAT",
+        "key": "5200"
+    },
+    {
+        "value": "Daewoo",
+        "key": "6800"
+    },
+    {
+        "value": "Demag",
+        "key": "7150"
+    },
+    {
+        "value": "Dieci",
+        "key": "239"
+    },
+    {
+        "value": "Ditch Witch",
+        "key": "30050"
+    },
+    {
+        "value": "Doosan",
+        "key": "102"
+    },
+    {
+        "value": "Dresser",
+        "key": "28"
+    },
+    {
+        "value": "Dynapac",
+        "key": "7951"
+    },
+    {
+        "value": "Eurocomach",
+        "key": "218"
+    },
+    {
+        "value": "Faun",
+        "key": "8466"
+    },
+    {
+        "value": "Fermec",
+        "key": "8550"
+    },
+    {
+        "value": "Fiat",
+        "key": "8800"
+    },
+    {
+        "value": "Fuchs",
+        "key": "9300"
+    },
+    {
+        "value": "Furukawa",
+        "key": "9400"
+    },
+    {
+        "value": "Gehl",
+        "key": "9560"
+    },
+    {
+        "value": "Gehlmax",
+        "key": "9570"
+    },
+    {
+        "value": "Genie",
+        "key": "127"
+    },
+    {
+        "value": "Grove",
+        "key": "10066"
+    },
+    {
+        "value": "Hako",
+        "key": "10095"
+    },
+    {
+        "value": "Halla",
+        "key": "20"
+    },
+    {
+        "value": "Hamm",
+        "key": "10100"
+    },
+    {
+        "value": "Hanix",
+        "key": "10150"
+    },
+    {
+        "value": "Hanomag",
+        "key": "10200"
+    },
+    {
+        "value": "Haulotte",
+        "key": "128"
+    },
+    {
+        "value": "Hinowa",
+        "key": "10650"
+    },
+    {
+        "value": "Hitachi",
+        "key": "10700"
+    },
+    {
+        "value": "Hydrema",
+        "key": "11250"
+    },
+    {
+        "value": "Hyundai",
+        "key": "11600"
+    },
+    {
+        "value": "IHC",
+        "key": "11620"
+    },
+    {
+        "value": "IHI",
+        "key": "30054"
+    },
+    {
+        "value": "JCB",
+        "key": "12500"
+    },
+    {
+        "value": "JLG",
+        "key": "111"
+    },
+    {
+        "value": "Kaercher",
+        "key": "78"
+    },
+    {
+        "value": "Kaeser",
+        "key": "12895"
+    },
+    {
+        "value": "Kälble",
+        "key": "12890"
+    },
+    {
+        "value": "Kobelco",
+        "key": "13350"
+    },
+    {
+        "value": "Komatsu",
+        "key": "13500"
+    },
+    {
+        "value": "Kramer",
+        "key": "13600"
+    },
+    {
+        "value": "Krupp",
+        "key": "13875"
+    },
+    {
+        "value": "Kubota",
+        "key": "14000"
+    },
+    {
+        "value": "Liebherr",
+        "key": "15300"
+    },
+    {
+        "value": "Liugong",
+        "key": "31600"
+    },
+    {
+        "value": "Manitou",
+        "key": "16525"
+    },
+    {
+        "value": "MECALAC",
+        "key": "176"
+    },
+    {
+        "value": "MF",
+        "key": "17250"
+    },
+    {
+        "value": "Michigan",
+        "key": "17400"
+    },
+    {
+        "value": "Mitsubishi",
+        "key": "17700"
+    },
+    {
+        "value": "Morooka",
+        "key": "30048"
+    },
+    {
+        "value": "Moxy",
+        "key": "30051"
+    },
+    {
+        "value": "Multicar",
+        "key": "18200"
+    },
+    {
+        "value": "Neumeier",
+        "key": "32036"
+    },
+    {
+        "value": "Neuson",
+        "key": "18850"
+    },
+    {
+        "value": "New Holland",
+        "key": "18525"
+    },
+    {
+        "value": "Niftylift",
+        "key": "168"
+    },
+    {
+        "value": "NPK",
+        "key": "30052"
+    },
+    {
+        "value": "O & K",
+        "key": "18900"
+    },
+    {
+        "value": "Orthaus",
+        "key": "19150"
+    },
+    {
+        "value": "Palfinger",
+        "key": "19175"
+    },
+    {
+        "value": "Paus",
+        "key": "19183"
+    },
+    {
+        "value": "Pel-Job",
+        "key": "19200"
+    },
+    {
+        "value": "Potain",
+        "key": "20150"
+    },
+    {
+        "value": "Putzmeister",
+        "key": "258"
+    },
+    {
+        "value": "Rammax",
+        "key": "30053"
+    },
+    {
+        "value": "Renault",
+        "key": "20700"
+    },
+    {
+        "value": "Sany",
+        "key": "31672"
+    },
+    {
+        "value": "Scania",
+        "key": "22200"
+    },
+    {
+        "value": "Schaeff",
+        "key": "22300"
+    },
+    {
+        "value": "Schäffer",
+        "key": "167"
+    },
+    {
+        "value": "Sennebogen",
+        "key": "130"
+    },
+    {
+        "value": "Shatal",
+        "key": "22750"
+    },
+    {
+        "value": "Sunward",
+        "key": "31690"
+    },
+    {
+        "value": "Takeuchi",
+        "key": "23750"
+    },
+    {
+        "value": "Terberg",
+        "key": "23925"
+    },
+    {
+        "value": "Terex",
+        "key": "29333"
+    },
+    {
+        "value": "Thwaites",
+        "key": "110"
+    },
+    {
+        "value": "Unimog",
+        "key": "24580"
+    },
+    {
+        "value": "Upright",
+        "key": "133"
+    },
+    {
+        "value": "Vermeer",
+        "key": "30049"
+    },
+    {
+        "value": "Vögele",
+        "key": "15"
+    },
+    {
+        "value": "Volvo",
+        "key": "25100"
+    },
+    {
+        "value": "Wacker",
+        "key": "25250"
+    },
+    {
+        "value": "Weber",
+        "key": "25333"
+    },
+    {
+        "value": "Weidemann",
+        "key": "25366"
+    },
+    {
+        "value": "Wirtgen",
+        "key": "25850"
+    },
+    {
+        "value": "XCMG",
+        "key": "31729"
+    },
+    {
+        "value": "Xrok",
+        "key": "31915"
+    },
+    {
+        "value": "Yamaguchi",
+        "key": "25975"
+    },
+    {
+        "value": "Yanmar",
+        "key": "26100"
+    },
+    {
+        "value": "Zeppelin",
+        "key": "26300"
+    },
+    {
+        "value": "Zettelmeyer",
+        "key": "26400"
+    },
+    {
+        "value": "Andere",
+        "key": "1400"
+    }
+]
