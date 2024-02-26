@@ -15,12 +15,11 @@ import {
   LicenseInfo,
 } from "@mui/x-data-grid-premium";
 import { useQuery } from "@tanstack/react-query";
-import { Models } from "appwrite";
+import { parseISO, format } from "date-fns";
 import Link from "next/link";
 import { enqueueSnackbar } from "notistack";
 
 import React, { useEffect, useState } from "react";
-import { useCollection } from "react-appwrite";
 
 LicenseInfo.setLicenseKey(
   "e25030cfe0235dfde76a01f60b5bf883Tz00ODA0NixFPTE4OTM0NTI0MDAwMDAsUz1wcmVtaXVtLExNPXN1YnNjcmlwdGlvbixLVj0y"
@@ -62,11 +61,52 @@ const Stock = () => {
       .catch(() => {
         enqueueSnackbar({ message: `Deletion for ${row.name} failed` });
       });
-  };
-
-  const columns: GridColDef<Row>[] = [
-    { field: "name", headerName: "Name", width: 250 },
-    { field: "slug", headerName: "Slug", width: 350 },
+    };
+    
+    const columns: GridColDef<Row>[] = [
+      { field: "name", headerName: "Name", width: 250 },
+      {
+        field: "$createdAt",
+        headerName: "Created",
+        width: 100,
+        valueFormatter: (params) => {
+          return format(parseISO(params.value), "P");
+        },
+      },
+      {
+        field: "our-link",
+        headerName: "Our Link",
+        width: 75,
+        renderCell: (params) => {
+          if (params.row.slug)
+            return (
+              <Link
+                target="_blank"
+                href={
+                  process.env.NEXT_PUBLIC_FE_BASEURL +
+                  "/product/" +
+                  params.row.slug
+                }
+              >
+                Visit
+              </Link>
+            );
+        },
+      },
+      {
+        field: "link",
+        headerName: "Link",
+        width: 60,
+        renderCell: (params) => {
+          if (params.row.link)
+            return (
+              <Link target="_blank" href={params.row.link.href}>
+                Visit
+              </Link>
+            );
+        },
+      },
+      { field: "slug", headerName: "Slug", width: 220 },
     { field: "description", headerName: "Description", width: 200 },
     {
       field: "price",
@@ -91,42 +131,9 @@ const Stock = () => {
     {
       field: "images",
       headerName: "Images",
-      width: 50,
+      width: 70,
       renderCell: (params) => {
         return <>{params.row.images.length}</>;
-      },
-    },
-    {
-      field: "our-link",
-      headerName: "Our Link",
-      width: 75,
-      renderCell: (params) => {
-        if (params.row.slug)
-          return (
-            <Link
-              target="_blank"
-              href={
-                process.env.NEXT_PUBLIC_FE_BASEURL +
-                "/product/" +
-                params.row.slug
-              }
-            >
-              Visit
-            </Link>
-          );
-      },
-    },
-    {
-      field: "link",
-      headerName: "Link",
-      width: 60,
-      renderCell: (params) => {
-        if (params.row.link)
-          return (
-            <Link target="_blank" href={params.row.link.href}>
-              Visit
-            </Link>
-          );
       },
     },
     {
