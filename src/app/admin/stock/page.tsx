@@ -15,14 +15,14 @@ import {
   LicenseInfo,
 } from "@mui/x-data-grid-premium";
 import { useQuery } from "@tanstack/react-query";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { enqueueSnackbar } from "notistack";
 
 import React, { useEffect, useState } from "react";
 
 LicenseInfo.setLicenseKey(
-  "e25030cfe0235dfde76a01f60b5bf883Tz00ODA0NixFPTE4OTM0NTI0MDAwMDAsUz1wcmVtaXVtLExNPXN1YnNjcmlwdGlvbixLVj0y"
+  "57534908ef4245d803e2687128c4e615Tz00ODA0NixFPTE4OTg0NDM3NzgwMDAsUz1wcmVtaXVtLExNPXN1YnNjcmlwdGlvbixLVj0y"
 );
 
 const PAGE_SIZE = 25;
@@ -70,10 +70,10 @@ const Stock = () => {
     { field: "name", headerName: "Name", width: 250 },
     {
       field: "$createdAt",
-      headerName: "Created",
-      width: 100,
+      headerName: "Time online",
+      width: 120,
       valueFormatter: (params) => {
-        return format(parseISO(params.value), "P");
+        return formatDistanceToNow(parseISO(params.value));
       },
     },
     {

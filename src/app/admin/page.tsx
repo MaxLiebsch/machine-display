@@ -2,8 +2,6 @@
 
 
 import { redirect } from "next/navigation";
-import AuthProvider from "../lib/providers/AuthProvider";
-
 
 export interface PageContent {
   p: string;
@@ -20,11 +18,5 @@ export interface PageContent {
 }
 
 export default function Page({ params }: { params: { slug: string } }) {
-  redirect('/admin/search')
-  return (
-    <AuthProvider>
-      <div> 
-      </div>
-    </AuthProvider>
-  );
+  redirect('/admin/search') 
 }

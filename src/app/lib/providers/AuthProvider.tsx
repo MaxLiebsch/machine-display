@@ -1,12 +1,12 @@
-'use client'
+"use client";
 import React, { ReactNode, useEffect, useState } from "react";
-import { getAccount, getSession } from '@/app/lib/services/appwrite.service';
+import { getAccount, getSession } from "@/app/lib/services/appwrite.service";
 import { redirect, useRouter } from "next/navigation";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authorized, setAuthorized] = useState<boolean>(false); 
+  const [authorized, setAuthorized] = useState<boolean>(false);
   const router = useRouter();
-  
+
   useEffect(() => {
     getSession()
       .then((session) => {
@@ -17,14 +17,16 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
               if (admin) {
                 setAuthorized(true);
               } else {
-                redirect("/");
+                redirect("/login");
               }
             }
           })
-          .catch((error) => {});
+          .catch((error) => {
+            console.log("error:", error);
+          });
       })
       .catch(() => {
-        router.push("login");
+        router.push("/login");
       });
   }, []);
 

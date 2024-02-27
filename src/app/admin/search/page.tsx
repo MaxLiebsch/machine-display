@@ -1,12 +1,12 @@
-import Search from '@/app/components/Search'
-import React from 'react'
+import Search from "@/app/components/Search";
+import React from "react";
 
 const Page = () => {
   return (
     <div>
-        <Search/>
+      <Search />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

@@ -7,6 +7,7 @@ import ReactQueryProvider from "./lib/providers/ReactQueryProvider";
 import SnackProvider from "./lib/providers/SnackBarProvider";
 import AppWriteProvider from "./lib/providers/AppWriteProvider";
 import MyLocalisationProvider from "./lib/providers/LocalisationProvider";
+import MuiXLicense from "./components/MuiXLicense";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           </ReactQueryProvider>
         </AppWriteProvider>
         </MyLocalisationProvider>
+        <MuiXLicense/>
       </body>
     </html>
   );

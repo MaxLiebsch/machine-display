@@ -4,9 +4,10 @@ import {
   CircularProgress,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IProduct, Query, SearchFormFields } from "../Search";
 import {
   FieldArrayMethodProps,
@@ -14,6 +15,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { nanoid } from "nanoid";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ShoplistItem = ({
   shopDomain,
@@ -44,14 +46,18 @@ const ShoplistItem = ({
   const { formState, getValues } = methods;
   const enabled =
     formState.isSubmitted &&
-    getValues("shops").some((_shop: { d: string }) => _shop.d === shopDomain);
-  const { isLoading, isSuccess, data,error } = useShopQuery({
+    getValues("shops")?.some((_shop: { d: string }) => _shop.d === shopDomain);
+  const { isLoading, isSuccess, data, error } = useShopQuery({
     query,
     shopDomain,
     enabled,
   });
+  const queryClient = useQueryClient();
+  const [found, setFound]= useState<number>();
+
   const labelId = `checkbox-list-secondary-label-${shopDomain}`;
-  const isError = data?.data.content?.message
+  const isError = data?.data.content?.message;
+
   useEffect(() => {
     if (data?.data.content?.length && isSuccess) {
       onSetProducts(
@@ -72,44 +78,47 @@ const ShoplistItem = ({
           };
         })
       );
+      setFound(data?.data.content?.length)
+      queryClient.setQueryData([{ query, shopDomain }], {
+        data: {
+          content: [],
+        },
+      });
     }
   }, [data]);
 
   return (
-    <ListItem
-      secondaryAction={
-        <>
-          {isLoading ? (
-            <CircularProgress />
-          ) : (
-            <Checkbox
-              edge="end"
-              onChange={(value) => {
-                const index = fields.findIndex(
-                  (field) => field.d === shopDomain
-                );
-                if (value.target.checked) {
-                  append({ d: shopDomain });
-                } else {
-                  remove(index);
-                }
-              }}
-              checked={fields.some((field) => shopDomain === field.d)}
-              inputProps={{ "aria-labelledby": labelId }}
-            />
-          )}
-        </>
-      }
-      disablePadding
-    >
+    <ListItem disablePadding>
       <ListItemButton>
+        <ListItemIcon>
+          <>
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <Checkbox
+                edge="end"
+                onChange={(value) => {
+                  const index = fields.findIndex(
+                    (field) => field.d === shopDomain
+                  );
+                  if (value.target.checked) {
+                    append({ d: shopDomain });
+                  } else {
+                    remove(index);
+                  }
+                }}
+                checked={fields.some((field) => shopDomain === field.d)}
+                inputProps={{ "aria-labelledby": labelId }}
+              />
+            )}
+          </>
+        </ListItemIcon>
         <ListItemText
           id={labelId}
           primary={`${shopDomain}`}
-          secondary={`${
-            isError ? isError:''}  ${
-            data?.data.content?.length
-              ? `${data.data.content.length} matches`
+          secondary={`${isError ? isError : ""}  ${
+            found
+              ? `${found} matches`
               : "No machines found"
           }`}
         />

@@ -18,6 +18,7 @@ export const useShopQuery = ({
   return useQuery({
     enabled,
     refetchOnMount: false,
+    staleTime: Infinity,
     refetchInterval: false,
     retry: false,
     refetchOnWindowFocus: false,

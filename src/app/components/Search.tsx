@@ -2,7 +2,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import {
-  FieldArrayMethodProps,
   FormProvider,
   SubmitHandler,
   useFieldArray,
@@ -12,26 +11,19 @@ import * as yup from "yup";
 import ControlledDropDown from "./controlledFields/ControlledDropDown";
 import brands from "../static/brand_category.json";
 import ControlledTextfield from "./controlledFields/ControlledTextfield";
-import {
-  Button,
-  LinearProgress,
-  List,
-} from "@mui/material";
+import { Button, Fab, LinearProgress, List } from "@mui/material";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/services/api.service";
 import ControlledDatePicker from "./controlledFields/ControlledDatePicker";
 import {
   DataGridPremium,
+  GridAddIcon,
   GridColDef,
-  LicenseInfo,
 } from "@mui/x-data-grid-premium";
 import ShoplistItem from "./search/ShoplistItem";
-
-LicenseInfo.setLicenseKey(
-  '57534908ef4245d803e2687128c4e615Tz00ODA0NixFPTE2OTA1MzM4NTU5NzQsUz1wcmVtaXVtLExNPXN1YnNjcmlwdGlvbixLVj0y'
-);
+import SlideOut from "./layout/SlideOut";
 
 export type QueryKeys = "brand" | "model" | "product" | "year";
 
@@ -42,6 +34,7 @@ export interface IProduct {
   price: number | "no price";
   description?: string;
   shop: string;
+  location: string;
   nameSub?: string;
   year?: string;
   createdAt: string;
@@ -57,8 +50,8 @@ export interface Query {
   product: Product;
 }
 export interface Year {
-  key: string;
-  value: string;
+  min: number;
+  max: number;
 }
 
 export interface Brand {
@@ -80,7 +73,10 @@ export interface SearchFormFields {
   category: string;
   brand: string;
   model: string;
-  year?: Date | null;
+  year: {
+    min: Date | null;
+    max: Date | null;
+  };
   product?: string;
   shops: { d: string }[];
 }
@@ -89,7 +85,10 @@ const schema = yup.object({
   category: yup.string().required(),
   brand: yup.string().required(),
   model: yup.string().required(),
-  year: yup.date().nullable(),
+  year: yup.object({
+    min: yup.date().required().nullable(),
+    max: yup.date().required().nullable(),
+  }),
   product: yup.string(),
   shops: yup
     .array(
@@ -103,11 +102,15 @@ const schema = yup.object({
 const Search = () => {
   const methods = useForm<SearchFormFields>({
     defaultValues: {
-      category: "ConstructionMachine",
+      year: {
+        min: new Date(2004, 0, 0),
+        max: new Date(2015, 0, 0),
+      },
     },
     resolver: yupResolver<SearchFormFields>(schema),
   });
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [open, setOpen] = useState<boolean>(true);
   const [query, setQuery] = useState<Query>({
     category: "",
     brand: {
@@ -115,8 +118,8 @@ const Search = () => {
       key: "",
     },
     year: {
-      key: "",
-      value: "",
+      min: 0,
+      max: 0,
     },
     model: {
       key: "",
@@ -143,6 +146,7 @@ const Search = () => {
 
   const onSubmit: SubmitHandler<SearchFormFields> = async (data) => {
     setProducts([]);
+    setOpen(false);
     const query: Query = {
       category: data.category,
       brand: {
@@ -150,8 +154,8 @@ const Search = () => {
         key: data.brand,
       },
       year: {
-        key: data.year ? data.year.getFullYear().toString() : "",
-        value: data.year ? data.year.getFullYear().toString() : "",
+        min: data.year.min !== null ? data.year.min.getFullYear() : 0,
+        max: data.year.max !== null ? data.year.max.getFullYear() : 0,
       },
       model: {
         key: data.model,
@@ -162,10 +166,7 @@ const Search = () => {
         value: "",
       },
     };
-    setQuery(query)
-    setTimeout(()=>{
-      reset()
-    },1500)
+    setQuery(query);
   };
 
   const shopsQuery = useQuery({
@@ -183,14 +184,30 @@ const Search = () => {
     }
   }, [shops]);
 
+  useEffect(() => {
+    reset({ shops: [] });
+  }, [formState.isSubmitSuccessful]);
+
+  const queryClient = useQueryClient()
+
+ 
+
   const columns: GridColDef[] = [
-    { field: "name", headerName: "Name", width: 150 },
-    { field: "description", headerName: "Description", width: 450 },
+    { field: "name", headerName: "Name", width: 350,
+    renderCell(params) {
+      return <span className="font-semibold text-lg">{params.value}</span>
+    },
+   },
+    { field: "description", headerName: "Description", width: 150 },
+    { field: "location", headerName: "Location", width: 150 },
     {
       field: "price",
       headerName: "Price",
       width: 150,
       sortable: true,
+      renderCell(params) {
+        return <span className="font-semibold text-lg">{params.value}</span>
+      },
       sortComparator: (v1, v2) => {
         const _v1 = Number(v1);
         const _v2 = Number(v2);
@@ -206,7 +223,7 @@ const Search = () => {
         }
       },
     },
-    { field: "year", headerName: "Year", width: 150 },
+    { field: "year", headerName: "Year", width: 70 },
     { field: "shop", headerName: "Shop", width: 150 },
     {
       field: "link",
@@ -214,7 +231,7 @@ const Search = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <Link target="_blank" href={params.row.link}>
+          <Link className="underline text-indigo-700 cursor-pointer text-lg" target="_blank" href={params.row.link}>
             Visit
           </Link>
         );
@@ -224,84 +241,132 @@ const Search = () => {
 
   return (
     <div className="mt-2">
-      <FormProvider {...methods}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex justify-between relative gap-2 flex-col"
-        >
-          <div className="flex flex-row gap-2">
-            <ControlledDropDown
-              variant="outlined"
-              name={"category"}
-              defaultValue={{ key: "default", value: "Default" }}
-              label="Category"
-              entries={[
-                { key: "default", value: "Default" },
-                { key: "AgriculturalVehicle", value: "Agricultural Vehicle" },
-                { key: "ConstructionMachine", value: "Construction Machines" },
-              ]}
-            />
-            <ControlledDropDown
-              variant="outlined"
-              name={"brand"}
-              label="Brand"
-              entries={brands}
-            />
-            <ControlledTextfield fullWidth name="model" label="Model" />
-            <ControlledDatePicker  name={"Year"} label="year" views={["year"]} />
-          </div>
+      {!open && (
+        <div className="absolute right-0 top-[50%] z-50">
           <Button
-            disabled={formState.isSubmitting}
-            type="submit"
-            variant="outlined"
+            color="primary"
+            onClick={() => setOpen(true)}
+            aria-label="add"
           >
-            Search
+            <GridAddIcon />
           </Button>
-        </form>
-        <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 mt-4">
-          Available shops
-        </h2>
-        {shopsQuery.data?.data && (
-          <List
-            dense
-            className="grid grid-cols-3"
-            sx={{ width: "100%", bgcolor: "background.paper" }}
+        </div>
+      )}
+
+      <SlideOut open={open} setOpen={setOpen}>
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex justify-between relative gap-2 flex-col"
           >
-            {shopsQuery.data.data.shops.map(
-              (shop: { d: string }, i: number) => {
-                const enabled =
-                  formState.isSubmitting &&
-                  getValues("shops").some((_shop) => _shop.d === shop.d);
-                return (
-                  <ShoplistItem
-                    key={shop.d}
-                    shopDomain={shop.d}
-                    enabled={enabled}
-                    query={query}
-                    fields={fields}
-                    onSetProducts={handleSetProducts}
-                    remove={remove}
-                    append={append}
-                  />
-                );
-              }
-            )}
-          </List>
-        )}
-      </FormProvider>
-      {formState.isSubmitting && <LinearProgress />}
+            <div className="flex flex-col gap-2">
+              <ControlledDropDown
+                variant="outlined"
+                name={"category"}
+                defaultValue={{
+                  key: "ConstructionMachine",
+                  value: "Construction Machines",
+                }}
+                label="Category"
+                entries={[
+                  { key: "default", value: "Default" },
+                  { key: "AgriculturalVehicle", value: "Agricultural Vehicle" },
+                  {
+                    key: "ConstructionMachine",
+                    value: "Construction Machines",
+                  },
+                ]}
+              />
+              <ControlledDropDown
+                variant="outlined"
+                name={"brand"}
+                label="Brand"
+                entries={brands}
+              />
+              <ControlledTextfield fullWidth name="model" label="Model" />
+              <div className="flex flex-row gap-2">
+                <ControlledDatePicker
+                  sx={{ width: "100%" }}
+                  name={"year.min"}
+                  label="Year min"
+                  minDate={new Date(1999, 0, 0)}
+                  maxDate={new Date()}
+                  views={["year"]}
+                />
+                <ControlledDatePicker
+                  sx={{ width: "100%" }}
+                  name={"year.max"}
+                  label="Year max"
+                  minDate={new Date(1999, 0, 0)}
+                  maxDate={new Date()}
+                  views={["year"]}
+                />
+              </div>
+            </div>
+            <Button
+              disabled={formState.isSubmitting}
+              type="submit"
+              variant="outlined"
+            >
+              Search
+            </Button>
+          </form>
+          <h2 className="text-xl font-bold leading-tight tracking-tight text-gray-900 mt-4">
+            Available shops
+          </h2>
+          {shopsQuery.data?.data && (
+            <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
+              {shopsQuery.data.data.shops.map(
+                (shop: { d: string }, i: number) => {
+                  const enabled =
+                    formState.isSubmitting &&
+                    getValues("shops")?.some((_shop) => _shop.d === shop.d);
+                  return (
+                    <ShoplistItem
+                      key={shop.d}
+                      shopDomain={shop.d}
+                      enabled={enabled}
+                      query={query}
+                      fields={fields}
+                      onSetProducts={handleSetProducts}
+                      remove={remove}
+                      append={append}
+                    />
+                  );
+                }
+              )}
+            </List>
+          )}
+        </FormProvider>
+      </SlideOut>
+      {queryClient.isFetching() ? <LinearProgress />:<></>}
+      <div className='relative'>
+      {query.brand.key !== "" && (
+        <div className="absolute left-0">
+          Query: {query.brand.value} {query.model.value}, {query.year.min} -{" "}
+          {query.year.max}
+        </div>
+      )}
       {products.length ? (
         <>
-          <div className="text-end">
-          {products.length} Products found
-          </div>
-          <div className="flex h-[calc(100vh-420px)] ">
-            <DataGridPremium rows={products} columns={columns} />
+          <div className="text-end">{products.length} Products found</div>
+          <div className="flex h-[calc(100vh-320px)] ">
+            <DataGridPremium
+              rows={products}
+              columns={columns}
+              initialState={{
+                sorting: {
+                  sortModel: [{ field: "price", sort: "asc" }],
+                },
+              }}
+            />
           </div>
         </>
       ) : (
         <div className="text-center my-2">No Results </div>
       )}
+
+      </div>
     </div>
   );
 };
