@@ -81,6 +81,8 @@ export interface SearchFormFields {
   shops: { d: string }[];
 }
 
+export interface Shop { d: string, active: boolean }
+
 const schema = yup.object({
   category: yup.string().required(),
   brand: yup.string().required(),
@@ -174,7 +176,7 @@ const Search = () => {
     queryFn: () => api.get("/shops/Machinery"),
   });
 
-  const shops = shopsQuery.data?.data.shops;
+  const shops = shopsQuery.data?.data.shops as Shop[];
 
   useEffect(() => {
     if (shops) {
@@ -316,15 +318,15 @@ const Search = () => {
           </h2>
           {shopsQuery.data?.data && (
             <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
-              {shopsQuery.data.data.shops.map(
-                (shop: { d: string }, i: number) => {
+              {shops.map(
+                (shop, i: number) => {
                   const enabled =
                     formState.isSubmitting &&
                     getValues("shops")?.some((_shop) => _shop.d === shop.d);
                   return (
                     <ShoplistItem
                       key={shop.d}
-                      shopDomain={shop.d}
+                      shop={shop}
                       enabled={enabled}
                       query={query}
                       fields={fields}

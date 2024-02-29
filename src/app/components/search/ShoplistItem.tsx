@@ -8,7 +8,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { IProduct, Query, SearchFormFields } from "../Search";
+import { IProduct, Query, SearchFormFields, Shop } from "../Search";
 import {
   FieldArrayMethodProps,
   FieldArrayWithId,
@@ -18,14 +18,14 @@ import { nanoid } from "nanoid";
 import { useQueryClient } from "@tanstack/react-query";
 
 const ShoplistItem = ({
-  shopDomain,
+  shop,
   query,
   fields,
   remove,
   append,
   onSetProducts,
 }: {
-  shopDomain: string;
+  shop: Shop;
   enabled: boolean;
   query: Query;
   remove: (index?: number | number[] | undefined) => void;
@@ -42,6 +42,7 @@ const ShoplistItem = ({
     options?: FieldArrayMethodProps | undefined
   ) => void;
 }) => {
+  const shopDomain = shop.d;
   const methods = useFormContext();
   const { formState, getValues } = methods;
   const enabled =
@@ -53,7 +54,7 @@ const ShoplistItem = ({
     enabled,
   });
   const queryClient = useQueryClient();
-  const [found, setFound]= useState<number>();
+  const [found, setFound] = useState<number>();
 
   const labelId = `checkbox-list-secondary-label-${shopDomain}`;
   const isError = data?.data.content?.message;
@@ -78,7 +79,7 @@ const ShoplistItem = ({
           };
         })
       );
-      setFound(data?.data.content?.length)
+      setFound(data?.data.content?.length);
       queryClient.setQueryData([{ query, shopDomain }], {
         data: {
           content: [],
@@ -97,6 +98,7 @@ const ShoplistItem = ({
             ) : (
               <Checkbox
                 edge="end"
+                disabled={!shop.active}
                 onChange={(value) => {
                   const index = fields.findIndex(
                     (field) => field.d === shopDomain
@@ -117,9 +119,7 @@ const ShoplistItem = ({
           id={labelId}
           primary={`${shopDomain}`}
           secondary={`${isError ? isError : ""}  ${
-            found
-              ? `${found} matches`
-              : "No machines found"
+            found ? `${found} matches` : "No machines found"
           }`}
         />
       </ListItemButton>
