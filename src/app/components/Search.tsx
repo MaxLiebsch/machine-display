@@ -81,7 +81,10 @@ export interface SearchFormFields {
   shops: { d: string }[];
 }
 
-export interface Shop { d: string, active: boolean }
+export interface Shop {
+  d: string;
+  active: boolean;
+}
 
 const schema = yup.object({
   category: yup.string().required(),
@@ -180,7 +183,7 @@ const Search = () => {
 
   useEffect(() => {
     if (shops) {
-      shops.map((shop: { d: string }, i: number) => {
+      shops.map((shop, i: number) => {
         if (!fields.some((field) => field.d === shop.d)) append({ d: shop.d });
       });
     }
@@ -190,16 +193,17 @@ const Search = () => {
     reset({ shops: [] });
   }, [formState.isSubmitSuccessful]);
 
-  const queryClient = useQueryClient()
-
- 
+  const queryClient = useQueryClient();
 
   const columns: GridColDef[] = [
-    { field: "name", headerName: "Name", width: 350,
-    renderCell(params) {
-      return <span className="font-semibold text-lg">{params.value}</span>
+    {
+      field: "name",
+      headerName: "Name",
+      width: 350,
+      renderCell(params) {
+        return <span className="font-semibold text-lg">{params.value}</span>;
+      },
     },
-   },
     { field: "description", headerName: "Description", width: 150 },
     { field: "location", headerName: "Location", width: 150 },
     {
@@ -208,7 +212,7 @@ const Search = () => {
       width: 150,
       sortable: true,
       renderCell(params) {
-        return <span className="font-semibold text-lg">{params.value}</span>
+        return <span className="font-semibold text-lg">{params.value}</span>;
       },
       sortComparator: (v1, v2) => {
         const _v1 = Number(v1);
@@ -233,7 +237,11 @@ const Search = () => {
       width: 150,
       renderCell: (params) => {
         return (
-          <Link className="underline text-indigo-700 cursor-pointer text-lg" target="_blank" href={params.row.link}>
+          <Link
+            className="underline text-indigo-700 cursor-pointer text-lg"
+            target="_blank"
+            href={params.row.link}
+          >
             Visit
           </Link>
         );
@@ -262,29 +270,34 @@ const Search = () => {
             className="flex justify-between relative gap-2 flex-col"
           >
             <div className="flex flex-col gap-2">
-              <ControlledDropDown
-                variant="outlined"
-                name={"category"}
-                defaultValue={{
-                  key: "ConstructionMachine",
-                  value: "Construction Machines",
-                }}
-                label="Category"
-                entries={[
-                  { key: "default", value: "Default" },
-                  { key: "AgriculturalVehicle", value: "Agricultural Vehicle" },
-                  {
+              <div className="flex flex-row gap-1">
+                <ControlledDropDown
+                  variant="outlined"
+                  name={"category"}
+                  defaultValue={{
                     key: "ConstructionMachine",
                     value: "Construction Machines",
-                  },
-                ]}
-              />
-              <ControlledDropDown
-                variant="outlined"
-                name={"brand"}
-                label="Brand"
-                entries={brands}
-              />
+                  }}
+                  label="Category"
+                  entries={[
+                    { key: "default", value: "Default" },
+                    {
+                      key: "AgriculturalVehicle",
+                      value: "Agricultural Vehicle",
+                    },
+                    {
+                      key: "ConstructionMachine",
+                      value: "Construction Machines",
+                    },
+                  ]}
+                />
+                <ControlledDropDown
+                  variant="outlined"
+                  name={"brand"}
+                  label="Brand"
+                  entries={brands}
+                />
+              </div>
               <ControlledTextfield fullWidth name="model" label="Model" />
               <div className="flex flex-row gap-2">
                 <ControlledDatePicker
@@ -317,12 +330,21 @@ const Search = () => {
             Available shops
           </h2>
           {shopsQuery.data?.data && (
-            <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
-              {shops.map(
-                (shop, i: number) => {
+            <List
+              dense
+              className="h-[calc(100vh-400px)]"
+              sx={{
+                width: "100%",
+                bgcolor: "background.paper",
+                overflowY: "scroll",
+              }}
+            >
+              {shops
+                .sort((a, b) => a.d.localeCompare(b.d))
+                .map((shop, i: number) => {
                   const enabled =
                     formState.isSubmitting &&
-                    getValues("shops")?.some((_shop) => _shop.d === shop.d);
+                    getValues("shops")?.some((_shop) => _shop.d === shop.d && shop.active);
                   return (
                     <ShoplistItem
                       key={shop.d}
@@ -335,39 +357,37 @@ const Search = () => {
                       append={append}
                     />
                   );
-                }
-              )}
+                })}
             </List>
           )}
         </FormProvider>
       </SlideOut>
-      {queryClient.isFetching() ? <LinearProgress />:<></>}
-      <div className='relative'>
-      {query.brand.key !== "" && (
-        <div className="absolute left-0">
-          Query: {query.brand.value} {query.model.value}, {query.year.min} -{" "}
-          {query.year.max}
-        </div>
-      )}
-      {products.length ? (
-        <>
-          <div className="text-end">{products.length} Products found</div>
-          <div className="flex h-[calc(100vh-320px)] ">
-            <DataGridPremium
-              rows={products}
-              columns={columns}
-              initialState={{
-                sorting: {
-                  sortModel: [{ field: "price", sort: "asc" }],
-                },
-              }}
-            />
+      {queryClient.isFetching() ? <LinearProgress /> : <></>}
+      <div className="relative">
+        {query.brand.key !== "" && (
+          <div className="absolute left-0">
+            Query: {query.brand.value} {query.model.value}, {query.year.min} -{" "}
+            {query.year.max}
           </div>
-        </>
-      ) : (
-        <div className="text-center my-2">No Results </div>
-      )}
-
+        )}
+        {products.length ? (
+          <>
+            <div className="text-end">{products.length} Products found</div>
+            <div className="flex h-[calc(100vh-320px)] ">
+              <DataGridPremium
+                rows={products}
+                columns={columns}
+                initialState={{
+                  sorting: {
+                    sortModel: [{ field: "price", sort: "asc" }],
+                  },
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="text-center my-2">No Results </div>
+        )}
       </div>
     </div>
   );

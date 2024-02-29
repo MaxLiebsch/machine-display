@@ -16,6 +16,7 @@ import {
 } from "react-hook-form";
 import { nanoid } from "nanoid";
 import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 const ShoplistItem = ({
   shop,
@@ -109,7 +110,7 @@ const ShoplistItem = ({
                     remove(index);
                   }
                 }}
-                checked={fields.some((field) => shopDomain === field.d)}
+                checked={fields.some((field) => shopDomain === field.d && shop.active)}
                 inputProps={{ "aria-labelledby": labelId }}
               />
             )}
@@ -117,7 +118,15 @@ const ShoplistItem = ({
         </ListItemIcon>
         <ListItemText
           id={labelId}
-          primary={`${shopDomain}`}
+          primary={
+            <Link
+              className={`${shop.active ? 'font-semibold text-lg leading-tight tracking-tight': ''} underline`}
+              target="_blank"
+              href={`${"https://" + shopDomain}`}
+            >
+              {shopDomain}
+            </Link>
+          }
           secondary={`${isError ? isError : ""}  ${
             found ? `${found} matches` : "No machines found"
           }`}
