@@ -1,0 +1,362 @@
+[
+  {
+    "value": "Beliebig",
+    "key": ""
+  },
+  {
+    "value": "Accord",
+    "key": "350"
+  },
+  {
+    "value": "Agco / Massey Ferguson",
+    "key": "550"
+  },
+  {
+    "value": "Amazone",
+    "key": "1250"
+  },
+  {
+    "value": "Avant Tecno",
+    "key": "166"
+  },
+  {
+    "value": "Becker",
+    "key": "2833"
+  },
+  {
+    "value": "Belarus",
+    "key": "233"
+  },
+  {
+    "value": "Bergmann",
+    "key": "3150"
+  },
+  {
+    "value": "Branson",
+    "key": "65"
+  },
+  {
+    "value": "Busatis",
+    "key": "4533"
+  },
+  {
+    "value": "BvL - Van Lengerich",
+    "key": "4566"
+  },
+  {
+    "value": "Carraro",
+    "key": "4950"
+  },
+  {
+    "value": "Case",
+    "key": "5100"
+  },
+  {
+    "value": "Claas",
+    "key": "5950"
+  },
+  {
+    "value": "Deutz-Fahr",
+    "key": "7500"
+  },
+  {
+    "value": "Doll",
+    "key": "7950"
+  },
+  {
+    "value": "Dücker",
+    "key": "7920"
+  },
+  {
+    "value": "Düvelsdorf",
+    "key": "7940"
+  },
+  {
+    "value": "Eberhardt",
+    "key": "7960"
+  },
+  {
+    "value": "Eicher",
+    "key": "7980"
+  },
+  {
+    "value": "Fahr",
+    "key": "8425"
+  },
+  {
+    "value": "Fella",
+    "key": "8475"
+  },
+  {
+    "value": "Fendt",
+    "key": "8500"
+  },
+  {
+    "value": "Fiat",
+    "key": "8800"
+  },
+  {
+    "value": "Ford",
+    "key": "9000"
+  },
+  {
+    "value": "Fortschritt",
+    "key": "9150"
+  },
+  {
+    "value": "Foton",
+    "key": "117"
+  },
+  {
+    "value": "Frost",
+    "key": "9233"
+  },
+  {
+    "value": "Gaspardo",
+    "key": "9550"
+  },
+  {
+    "value": "GiANT",
+    "key": "32005"
+  },
+  {
+    "value": "Goldoni",
+    "key": "217"
+  },
+  {
+    "value": "Grimme",
+    "key": "10033"
+  },
+  {
+    "value": "Güldner",
+    "key": "29"
+  },
+  {
+    "value": "Gutbrod",
+    "key": "35"
+  },
+  {
+    "value": "Hako",
+    "key": "10095"
+  },
+  {
+    "value": "Hanomag",
+    "key": "10200"
+  },
+  {
+    "value": "Hassia",
+    "key": "10350"
+  },
+  {
+    "value": "Hittner",
+    "key": "243"
+  },
+  {
+    "value": "Holder",
+    "key": "10866"
+  },
+  {
+    "value": "Howard",
+    "key": "11025"
+  },
+  {
+    "value": "Hymach",
+    "key": "31922"
+  },
+  {
+    "value": "IHC",
+    "key": "11620"
+  },
+  {
+    "value": "Iseki",
+    "key": "11850"
+  },
+  {
+    "value": "Jacobsen",
+    "key": "12350"
+  },
+  {
+    "value": "JCB",
+    "key": "12500"
+  },
+  {
+    "value": "John Deere",
+    "key": "12700"
+  },
+  {
+    "value": "Kioti",
+    "key": "222"
+  },
+  {
+    "value": "Kramer",
+    "key": "13600"
+  },
+  {
+    "value": "Krone",
+    "key": "13800"
+  },
+  {
+    "value": "Kubota",
+    "key": "14000"
+  },
+  {
+    "value": "Lamborghini",
+    "key": "14600"
+  },
+  {
+    "value": "Landini",
+    "key": "14820"
+  },
+  {
+    "value": "Landsberg",
+    "key": "14840"
+  },
+  {
+    "value": "Langendorf",
+    "key": "14850"
+  },
+  {
+    "value": "Lanz",
+    "key": "14900"
+  },
+  {
+    "value": "Lely",
+    "key": "15133"
+  },
+  {
+    "value": "Lemken",
+    "key": "15166"
+  },
+  {
+    "value": "MAN",
+    "key": "16500"
+  },
+  {
+    "value": "Maschio",
+    "key": "16550"
+  },
+  {
+    "value": "Massey Ferguson",
+    "key": "16650"
+  },
+  {
+    "value": "McCormick",
+    "key": "16925"
+  },
+  {
+    "value": "Mengele",
+    "key": "17150"
+  },
+  {
+    "value": "Mercedes-Benz",
+    "key": "17200"
+  },
+  {
+    "value": "Mitsubishi",
+    "key": "17700"
+  },
+  {
+    "value": "Multicar",
+    "key": "18200"
+  },
+  {
+    "value": "New Holland",
+    "key": "18525"
+  },
+  {
+    "value": "Niemeyer",
+    "key": "18550"
+  },
+  {
+    "value": "Porsche",
+    "key": "20100"
+  },
+  {
+    "value": "Pöttinger",
+    "key": "19950"
+  },
+  {
+    "value": "PZ-Vicon",
+    "key": "20233"
+  },
+  {
+    "value": "Rabe",
+    "key": "20266"
+  },
+  {
+    "value": "Rau",
+    "key": "20320"
+  },
+  {
+    "value": "Rauch",
+    "key": "20340"
+  },
+  {
+    "value": "Reformwerke Wels",
+    "key": "20360"
+  },
+  {
+    "value": "Regent",
+    "key": "20380"
+  },
+  {
+    "value": "Renault",
+    "key": "20700"
+  },
+  {
+    "value": "Same",
+    "key": "21950"
+  },
+  {
+    "value": "Schäffer",
+    "key": "167"
+  },
+  {
+    "value": "Schlüter",
+    "key": "175"
+  },
+  {
+    "value": "Schmidt",
+    "key": "22350"
+  },
+  {
+    "value": "Shibaura",
+    "key": "240"
+  },
+  {
+    "value": "Steyr",
+    "key": "23366"
+  },
+  {
+    "value": "Strautmann",
+    "key": "23450"
+  },
+  {
+    "value": "TPS Labinprogres",
+    "key": "242"
+  },
+  {
+    "value": "Unimog",
+    "key": "24580"
+  },
+  {
+    "value": "Valtra",
+    "key": "227"
+  },
+  {
+    "value": "Vogel&Noot",
+    "key": "25050"
+  },
+  {
+    "value": "Weidemann",
+    "key": "25366"
+  },
+  {
+    "value": "Zetor",
+    "key": "26350"
+  },
+  {
+    "value": "Andere",
+    "key": "1400"
+  }
+]

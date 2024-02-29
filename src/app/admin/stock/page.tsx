@@ -33,7 +33,6 @@ const Stock = () => {
 
   const items = useQuery({
     queryKey: ["items", lastId],
-
     queryFn: async () => {
       const jwt = await getJWT();
       if (jwt) authenicatedFEClient(jwt.jwt);

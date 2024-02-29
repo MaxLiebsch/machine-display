@@ -9,9 +9,17 @@ import {
 } from "react-hook-form";
 import * as yup from "yup";
 import ControlledDropDown from "./controlledFields/ControlledDropDown";
-import brands from "../static/brand_category.json";
+import brands from "../static/brands_all.json";
+import agri_brands from "../static/brands_agri.json";
+import machinery_brands from "../static/brands_machinery.json";
 import ControlledTextfield from "./controlledFields/ControlledTextfield";
-import { Button, Fab, LinearProgress, List } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  LinearProgress,
+  List,
+  TextField,
+} from "@mui/material";
 
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -24,6 +32,7 @@ import {
 } from "@mui/x-data-grid-premium";
 import ShoplistItem from "./search/ShoplistItem";
 import SlideOut from "./layout/SlideOut";
+import ControlledAutoComplete from "./controlledFields/ControlledAutoComplete";
 
 export type QueryKeys = "brand" | "model" | "product" | "year";
 
@@ -71,7 +80,7 @@ export interface Product {
 
 export interface SearchFormFields {
   category: string;
-  brand: string;
+  brand: { key: string; value: string };
   model: string;
   year: {
     min: Date | null;
@@ -88,7 +97,12 @@ export interface Shop {
 
 const schema = yup.object({
   category: yup.string().required(),
-  brand: yup.string().required(),
+  brand: yup
+    .object({
+      key: yup.string().required(),
+      value: yup.string().required(),
+    })
+    .required(),
   model: yup.string().required(),
   year: yup.object({
     min: yup.date().required().nullable(),
@@ -152,12 +166,30 @@ const Search = () => {
   const onSubmit: SubmitHandler<SearchFormFields> = async (data) => {
     setProducts([]);
     setOpen(false);
+    let foundBrand = brands.find((brand) => brand.key === data.brand.key);
+    if (data.category === "AgriculturalVehicle") {
+      const agri = agri_brands.find(
+        (brand) => brand.value.toLowerCase() === data.brand.value.toLowerCase()
+      );
+      if (agri) {
+        foundBrand = agri;
+      } else {
+        foundBrand!.key = "1400";
+      }
+    }
+    if (data.category === "ConstructionMachine") {
+      const machinery = machinery_brands.find(
+        (brand) => brand.value.toLowerCase() === data.brand.value.toLowerCase()
+      );
+      if (machinery) {
+        foundBrand = machinery;
+      } else {
+        foundBrand!.key = "1400";
+      }
+    }
     const query: Query = {
       category: data.category,
-      brand: {
-        value: brands.find((brand) => brand.key === data.brand)?.value ?? "",
-        key: data.brand,
-      },
+      brand: foundBrand!,
       year: {
         min: data.year.min !== null ? data.year.min.getFullYear() : 0,
         max: data.year.max !== null ? data.year.max.getFullYear() : 0,
@@ -190,7 +222,7 @@ const Search = () => {
   }, [shops]);
 
   useEffect(() => {
-    reset({ shops: [] });
+    reset({ shops: [], brand: { key: "", value: "" } });
   }, [formState.isSubmitSuccessful]);
 
   const queryClient = useQueryClient();
@@ -291,12 +323,7 @@ const Search = () => {
                     },
                   ]}
                 />
-                <ControlledDropDown
-                  variant="outlined"
-                  name={"brand"}
-                  label="Brand"
-                  entries={brands}
-                />
+                <ControlledAutoComplete name={"brand"} />
               </div>
               <ControlledTextfield fullWidth name="model" label="Model" />
               <div className="flex flex-row gap-2">
@@ -344,7 +371,9 @@ const Search = () => {
                 .map((shop, i: number) => {
                   const enabled =
                     formState.isSubmitting &&
-                    getValues("shops")?.some((_shop) => _shop.d === shop.d && shop.active);
+                    getValues("shops")?.some(
+                      (_shop) => _shop.d === shop.d && shop.active
+                    );
                   return (
                     <ShoplistItem
                       key={shop.d}

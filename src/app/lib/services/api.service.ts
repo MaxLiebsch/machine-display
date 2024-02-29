@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccount, getJWT } from "./appwrite.service";
+import { getJWT } from "./appwrite.service";
 
 export const api = axios.create({
   baseURL: "/api",
@@ -10,18 +10,20 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(async function (request) {
-  if (!request.headers.get("x-appwrite-user-jwt")) {
+  const _token = sessionStorage.getItem("x-appwrite-user-jwt");
+  if (!_token) {
     const token = (await getJWT()).jwt;
+    sessionStorage.setItem("x-appwrite-user-jwt", token);
     request.headers["x-appwrite-user-jwt"] = token;
     return request;
+  }else{
+    request.headers["x-appwrite-user-jwt"] = _token;
   }
   return request;
 });
 
 api.interceptors.response.use(
   function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
     return response;
   },
   function (error) {
@@ -29,7 +31,8 @@ api.interceptors.response.use(
     if (error.response.status === 401) {
       originalRequest._retry = true;
       return getJWT().then((jwt) => {
-        originalRequest.headers["x-appwrite-user-jwt"] = jwt;
+        originalRequest.headers["x-appwrite-user-jwt"] = jwt.jwt;
+        sessionStorage.setItem("x-appwrite-user-jwt", jwt.jwt);
         return api(originalRequest);
       });
     }
