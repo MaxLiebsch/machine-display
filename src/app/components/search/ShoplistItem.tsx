@@ -48,7 +48,7 @@ const ShoplistItem = ({
   const { formState, getValues } = methods;
   const enabled =
     formState.isSubmitted &&
-    getValues("shops")?.some((_shop: { d: string }) => _shop.d === shopDomain);
+    getValues("shops")?.some((_shop: { d: string }) => _shop.d === shopDomain && shop.active);
   const { isLoading, isSuccess, data, error } = useShopQuery({
     query,
     shopDomain,
