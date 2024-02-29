@@ -216,7 +216,7 @@ const Search = () => {
   useEffect(() => {
     if (shops) {
       shops.map((shop, i: number) => {
-        if (!fields.some((field) => field.d === shop.d)) append({ d: shop.d });
+        if (!fields.some((field) => field.d === shop.d && shop.active)) append({ d: shop.d });
       });
     }
   }, [shops]);
