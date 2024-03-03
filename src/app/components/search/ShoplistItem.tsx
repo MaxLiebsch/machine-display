@@ -71,7 +71,6 @@ const ShoplistItem = ({
           } else {
             price = "no price";
           }
-
           return {
             ...product,
             price,

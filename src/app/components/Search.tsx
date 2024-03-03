@@ -13,26 +13,17 @@ import brands from "../static/brands_all.json";
 import agri_brands from "../static/brands_agri.json";
 import machinery_brands from "../static/brands_machinery.json";
 import ControlledTextfield from "./controlledFields/ControlledTextfield";
-import {
-  Autocomplete,
-  Button,
-  LinearProgress,
-  List,
-  TextField,
-} from "@mui/material";
+import { Button, LinearProgress, List } from "@mui/material";
 
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/services/api.service";
 import ControlledDatePicker from "./controlledFields/ControlledDatePicker";
-import {
-  DataGridPremium,
-  GridAddIcon,
-  GridColDef,
-} from "@mui/x-data-grid-premium";
+import { GridAddIcon } from "@mui/x-data-grid-premium";
 import ShoplistItem from "./search/ShoplistItem";
 import SlideOut from "./layout/SlideOut";
 import ControlledAutoComplete from "./controlledFields/ControlledAutoComplete";
+import { formatter } from "./forms/ProductForm";
 
 export type QueryKeys = "brand" | "model" | "product" | "year";
 
@@ -121,9 +112,11 @@ const schema = yup.object({
 const Search = () => {
   const methods = useForm<SearchFormFields>({
     defaultValues: {
+      category: "ConstructionMachine",
+      brand: { key: "", value: "" },
       year: {
         min: new Date(2004, 0, 0),
-        max: new Date(2015, 0, 0),
+        max: new Date(2018, 0, 0),
       },
     },
     resolver: yupResolver<SearchFormFields>(schema),
@@ -165,7 +158,6 @@ const Search = () => {
 
   const onSubmit: SubmitHandler<SearchFormFields> = async (data) => {
     setProducts([]);
-    setOpen(false);
     let foundBrand = brands.find((brand) => brand.key === data.brand.key);
     if (data.category === "AgriculturalVehicle") {
       const agri = agri_brands.find(
@@ -216,70 +208,22 @@ const Search = () => {
   useEffect(() => {
     if (shops) {
       shops.map((shop, i: number) => {
-        if (!fields.some((field) => field.d === shop.d && shop.active)) append({ d: shop.d });
+        if (!fields.some((field) => field.d === shop.d && shop.active))
+          append({ d: shop.d });
       });
     }
   }, [shops]);
 
   useEffect(() => {
-    reset({ shops: [], brand: { key: "", value: "" } });
+    if (formState.isValid) {
+      reset({
+        shops: shops.filter((shop) => shop.active),
+        brand: { key: "", value: "" },
+      });
+    }
   }, [formState.isSubmitSuccessful]);
 
   const queryClient = useQueryClient();
-
-  const columns: GridColDef[] = [
-    {
-      field: "name",
-      headerName: "Name",
-      width: 350,
-      renderCell(params) {
-        return <span className="font-semibold text-lg">{params.value}</span>;
-      },
-    },
-    { field: "description", headerName: "Description", width: 150 },
-    { field: "location", headerName: "Location", width: 150 },
-    {
-      field: "price",
-      headerName: "Price",
-      width: 150,
-      sortable: true,
-      renderCell(params) {
-        return <span className="font-semibold text-lg">{params.value}</span>;
-      },
-      sortComparator: (v1, v2) => {
-        const _v1 = Number(v1);
-        const _v2 = Number(v2);
-        if (_v1 && _v2) {
-          if (_v1 > _v2) return 1;
-          else return -1;
-        } else {
-          if (v1 === "no price" && _v2) return 1;
-          else {
-            if (v2 === "no price" && _v1) return -1;
-            else return 1;
-          }
-        }
-      },
-    },
-    { field: "year", headerName: "Year", width: 70 },
-    { field: "shop", headerName: "Shop", width: 150 },
-    {
-      field: "link",
-      headerName: "Link",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Link
-            className="underline text-indigo-700 cursor-pointer text-lg"
-            target="_blank"
-            href={params.row.link}
-          >
-            Visit
-          </Link>
-        );
-      },
-    },
-  ];
 
   return (
     <div className="mt-2">
@@ -306,10 +250,6 @@ const Search = () => {
                 <ControlledDropDown
                   variant="outlined"
                   name={"category"}
-                  defaultValue={{
-                    key: "ConstructionMachine",
-                    value: "Construction Machines",
-                  }}
                   label="Category"
                   entries={[
                     { key: "default", value: "Default" },
@@ -331,7 +271,7 @@ const Search = () => {
                   sx={{ width: "100%" }}
                   name={"year.min"}
                   label="Year min"
-                  minDate={new Date(1999, 0, 0)}
+                  minDate={new Date(1990, 0, 0)}
                   maxDate={new Date()}
                   views={["year"]}
                 />
@@ -339,14 +279,14 @@ const Search = () => {
                   sx={{ width: "100%" }}
                   name={"year.max"}
                   label="Year max"
-                  minDate={new Date(1999, 0, 0)}
+                  minDate={new Date(1990, 0, 0)}
                   maxDate={new Date()}
                   views={["year"]}
                 />
               </div>
             </div>
             <Button
-              disabled={formState.isSubmitting}
+              disabled={formState.isSubmitting || !formState.isValid}
               type="submit"
               variant="outlined"
             >
@@ -402,17 +342,48 @@ const Search = () => {
         {products.length ? (
           <>
             <div className="text-end">{products.length} Products found</div>
-            <div className="flex h-[calc(100vh-320px)] ">
-              <DataGridPremium
-                rows={products}
-                columns={columns}
-                initialState={{
-                  sorting: {
-                    sortModel: [{ field: "price", sort: "asc" }],
-                  },
-                }}
-              />
-            </div>
+            <ul role="list" className="divide-y divide-gray-100 p-0">
+              {[...products]
+                .sort((v1, v2) => {
+                  const _v1 = Number(v1.price);
+                  const _v2 = Number(v2.price);
+                  if (_v1 && _v2) {
+                    if (_v1 > _v2) return 1;
+                    else return -1;
+                  } else {
+                    if (v1.price === "no price" && _v2) return 1;
+                    else {
+                      if (v2.price === "no price" && _v1) return -1;
+                      else return 1;
+                    }
+                  }
+                })
+                .map((product) => (
+                  <Link key={product.name} href={product.link} target="_blank">
+                    <li className="flex gap-x-4 px-4 pt-5 pb-8 hover:bg-gray-300 relative">
+                      <div className="absolute bottom-1 italic">{product.shop}</div>
+                      <img
+                        className="h-32 w-40 flex-none transition-all hover:scale(2) delay-500 bg-gray-50"
+                        src={product.image}
+                        alt=""
+                      />
+                      <div className="min-w-0 grid grid-cols-2 w-full">
+                        <div>
+                          <p className="text-xl font-semibold leading-6 text-gray-900">
+                            {product.name}
+                          </p>
+                          <p>{product.description}</p>
+                          <p>{product.location}</p>
+                          <p>{product.year}</p>
+                        </div>
+                        <p className=" mt-1 truncate text-lg font-semibold leading-5 text-gray-800 place-self-start self-start justify-self-end">
+                          {product.price !== 'no price'? formatter.format(product.price): product.price}
+                        </p>
+                      </div>
+                    </li>
+                  </Link>
+                ))}
+            </ul>
           </>
         ) : (
           <div className="text-center my-2">No Results </div>

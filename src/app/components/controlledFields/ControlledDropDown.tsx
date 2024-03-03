@@ -1,7 +1,7 @@
-import { MenuItem } from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
-import DropDown from './DropDown';
-import ErrorTooltip from './ErrorTooltip';
+import { MenuItem } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
+import DropDown from "./DropDown";
+import ErrorTooltip from "./ErrorTooltip";
 
 export type ControlledDropDownProps<T extends string> = {
   name: string;
@@ -14,6 +14,7 @@ const ControlledDropDown = <T extends string>(
 ) => {
   const { name, entries, getValue, className, inputRef, placeholder, ...rest } =
     props;
+  console.log("rest:", rest);
   const { control } = useFormContext();
 
   return (
@@ -21,31 +22,32 @@ const ControlledDropDown = <T extends string>(
       key={`controller.${name}`}
       name={name}
       control={control}
-      defaultValue=""
-      render={({ field, fieldState }) => (
-        <ErrorTooltip
-          open={Boolean(fieldState.error?.message)}
-          title={String(fieldState.error?.message)}
-        >
-          <DropDown
-        
-            ref={inputRef}
-            className={`[&>.MuiOutlinedInput-notchedOutline] ${className}`}
-            value={field.value !== undefined ? field.value : ''}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            displayEmpty
-            {...rest}
+      render={({ field, fieldState }) => {
+        console.log('field:', field)
+        return (
+          <ErrorTooltip
+            open={Boolean(fieldState.error?.message)}
+            title={String(fieldState.error?.message)}
           >
-            {placeholder && <MenuItem value="">{placeholder}</MenuItem>}
-            {entries.map(({ key, value }) => (
-              <MenuItem key={key} value={key}>
-                {value ?? (getValue ? getValue(key) : value)}
-              </MenuItem>
-            ))}
-          </DropDown>
-        </ErrorTooltip>
-      )}
+            <DropDown
+              ref={inputRef}
+              className={`[&>.MuiOutlinedInput-notchedOutline] ${className}`}
+              value={field.value !== undefined ? field.value : ""}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              displayEmpty
+              {...rest}
+            >
+              {placeholder && <MenuItem value="">{placeholder}</MenuItem>}
+              {entries.map(({ key, value }) => (
+                <MenuItem key={key} value={key}>
+                  {value ?? (getValue ? getValue(key) : value)}
+                </MenuItem>
+              ))}
+            </DropDown>
+          </ErrorTooltip>
+        );
+      }}
     />
   );
 };

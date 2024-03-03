@@ -26,17 +26,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <MyLocalisationProvider>
-        <AppWriteProvider>
-          <ReactQueryProvider>
-            <SnackProvider>
-              <Header />
-              <main className="pt-20">{children}</main>
-              <Footer />
-            </SnackProvider>
-          </ReactQueryProvider>
-        </AppWriteProvider>
+          <AppWriteProvider>
+            <ReactQueryProvider>
+              <SnackProvider>
+                <main>{children}</main>
+
+                <Footer />
+              </SnackProvider>
+            </ReactQueryProvider>
+          </AppWriteProvider>
         </MyLocalisationProvider>
-        <MuiXLicense/>
+        <MuiXLicense />
       </body>
     </html>
   );

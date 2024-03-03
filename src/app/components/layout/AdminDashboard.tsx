@@ -5,21 +5,10 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
 const navigation = [
   { name: "Search", href: "/admin/search", current: false },
   { name: "New Product", href: "/admin/new-product", current: true },
   { name: "Stock", href: "/admin/stock", current: false },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
 ];
 
 function classNames(...classes: any[]) {
@@ -47,14 +36,14 @@ export default function AdminDashboard({ children }: { children: ReactNode }) {
                   <div className="flex">
                     <div className="flex flex-shrink-0 items-center">
                       <img
-                        className="block h-8 w-auto lg:hidden"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=slate&shade=500"
-                        alt="Your Company"
+                        className="block h-8 w-auto bg-[#559d8e] lg:hidden"
+                        src="/logo.png"
+                        alt="DipMax Machinery"
                       />
                       <img
-                        className="hidden h-8 w-auto lg:block"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=slate&shade=500"
-                        alt="Your Company"
+                        className="hidden h-8 bg-[#559d8e] w-auto lg:block"
+                        src="/logo.png"
+                        alt="DipMax Machinery"
                       />
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
@@ -198,7 +187,7 @@ export default function AdminDashboard({ children }: { children: ReactNode }) {
           )}
         </Disclosure>
 
-        <div className="py-10">
+        <div className="py-5 xl:py-8">
           <header>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">

@@ -27,6 +27,10 @@ import MyTimer from "../atoms/Timer";
 import { Models } from "appwrite";
 import { GiCheckMark } from "react-icons/gi";
 
+export const formatter = new Intl.NumberFormat("de-DE", {
+  style: "currency",
+  currency: "EUR",
+});
 const MyEditor = dynamic(
   () => {
     return import("../Editor");
@@ -89,10 +93,6 @@ const ProductForm = ({
 
     return str;
   };
-  const formatter = new Intl.NumberFormat("de-DE", {
-    style: "currency",
-    currency: "EUR",
-  });
 
   const methods = useForm<IProduct>({
     defaultValues: {
