@@ -1,14 +1,13 @@
 import {
   createFileFromNode,
-  getAuthenicatedClient,
+  getAdminClient,
 } from "@/app/lib/services/node-appwrite.service";
-import axios from "axios";
 import { InputFile, Storage } from "node-appwrite";
 import { NextRequest } from "next/server";
 import { sign } from "@/app/lib/sign";
 import mime from "mime-types";
 import { IImage } from "@/app/product/[...slug]/page";
-import { cookies, headers } from "next/headers";
+import {  headers } from "next/headers";
 import { backendapi } from "@/app/lib/services/backenapi.service";
 
 const { IMAGOR_BASE_URL, WATERMARK_FILE, IMAGOR_SECRET } =
@@ -18,7 +17,7 @@ export async function POST(request: NextRequest) {
   const jwt = headers().get("x-appwrite-user-jwt");
   if (!jwt) return new Response(null, { status: 401 });
 
-  const storage = new Storage(getAuthenicatedClient(jwt));
+  const storage = new Storage(getAdminClient());
 
   const body = await request.json();
   const watermarkUrl = sign(WATERMARK_FILE!, IMAGOR_SECRET!);

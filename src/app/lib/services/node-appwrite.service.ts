@@ -1,4 +1,3 @@
-import { IProduct } from "@/app/product/[...slug]/page";
 import { Client, ID, Storage } from "node-appwrite";
 import { cache } from "react";
 import { InputFile } from "node-appwrite";
@@ -13,17 +12,23 @@ export const getAuthenicatedClient = (jwt: string) => {
   return client.setJWT(jwt);
 };
 
+export const getAdminClient = () => {
+  return client.setKey(process.env.APPWRITE_API!);
+};
+
 // const databases = new Databases(client);
 const storage = new Storage(client);
 
-export const createFileFromNode = cache(async (file: InputFile, storage: Storage) => {
-  let promise = await storage.createFile(
-    process.env.NEXT_PUBLIC_IMAGE_BUCKET!,
-    ID.unique(),
-    file
-  );
-  return promise;
-});
+export const createFileFromNode = cache(
+  async (file: InputFile, storage: Storage) => {
+    let promise = await storage.createFile(
+      process.env.NEXT_PUBLIC_IMAGE_BUCKET!,
+      ID.unique(),
+      file
+    );
+    return promise;
+  }
+);
 
 export const createThumbnailPreview = cache(async (fileId: string) => {
   let promise = await storage.getFilePreview(
